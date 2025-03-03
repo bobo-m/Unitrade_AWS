@@ -1,0 +1,8 @@
+<div class="msg_response_box">
+    <% if (typeof message !== 'undefined' && message.length > 0 && typeof message[0].status !== 'undefined' && message[0].status >= 400) { %>
+        <div class="alert alert-danger"><%= message[0].message %></div> 
+    <% } %>
+    <% if (typeof message !== 'undefined' && message.length > 0 && typeof message[0].status !== 'undefined' && message[0].status < 400) { %>
+        <div class="alert alert-success"><%= message[0].message %></div> 
+    <% } %>
+</div>

@@ -1,0 +1,169 @@
+<!-- Quest Entries Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body table-responsive">
+                <div class="row page_top_bar">
+                    <div class="col-12">
+                        <div class="col-6 heading float-left">
+                            <h4 class="mt-0 header-title">Quest Entries</h4>
+                        </div>
+                      
+                    </div>
+                </div>
+
+                <table id="responsive-datatable" class="table table-bordered dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>User Name</th>
+                            <th>Task Name</th>
+                            <th>Quest Type</th>
+                            <th>Activity</th>
+                            <th>Screenshot</th>
+                            <!-- <th>Earn Coins</th> -->
+                            <th>Status</th>
+                            <!-- <th>Actions</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% let serialNumber = 1; %>
+                        <% questEntries[0].forEach(entry => { %>
+                            <tr id="quest-row-<%= entry.id %>">
+                                <td><%= serialNumber++ %></td>
+                                <td><%= entry.user_name || 'Unknown User' %></td>
+                                <td><%= entry.quest_name || 'Unknown Task' %></td>
+                                <td><%= entry.quest_type || 'N/A' %></td>
+                                <td><%= entry.activity || 'N/A' %></td>
+                             
+                                <td>
+                                    <% if (entry.quest_screenshot) { %>
+                                        <% JSON.parse(entry.quest_screenshot).forEach(screenshot => { %>
+                                            <button class="btn btn-info view-quest-image" data-image="/uploads/<%= screenshot %>" data-quest-id="<%= entry.quest_id %>">
+                                                View Screenshot
+                                            </button>
+                                        <% }) %>
+                                    <% } else { %>
+                                        No screenshot uploaded
+                                    <% } %>
+                                </td>
+                                <!-- <td><%= entry.earn_coin %></td> -->
+                                <td>
+                                    <% if (entry.status === 'completed') { %>
+                                        <span class="rounded-pill">Completed</span>
+                                    <% } else { %>
+                                        <span class="rounded-pill">Pending</span>
+                                    <% } %>
+                                </td>
+                                <!-- <td class="action_box">
+                                    <a href="/admin/<%= module_slug %>/<%= entry.id %>"><i class="fe-eye"></i></a>
+                                    <a href="/admin/<%= module_slug %>/edit/<%= entry.id %>"><i class="fe-edit"></i></a>
+                                    <a href="/admin/<%= module_slug %>/delete/<%= entry.id %>"><i class="fe-trash-2"></i></a>
+                                </td> -->
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal for Quest Screenshots with Approve/Disapprove actions -->
+<div class="modal fade" id="questImageModal" tabindex="-1" role="dialog" aria-labelledby="questImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="questImageModalLabel">Quest Screenshot</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="questModalImage" src="" alt="Quest Screenshot" class="img-fluid" />
+            </div>
+            <div class="modal-footer">
+                <!-- Approve and Disapprove buttons -->
+                <button type="button" class="btn btn-success" id="approveBtn">Approve</button>
+                <button type="button" class="btn btn-danger" id="disapproveBtn">Disapprove</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Image View Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Screenshot</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Screenshot" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  
+        $(document).ready(function () {
+    // Quest image modal display with approve/disapprove actions
+    $('.view-quest-image').click(function () {
+        var imageUrl = $(this).data('image');
+        var questId = $(this).data('quest-id');
+        console.log("Opening modal for quest ID:", questId);  // Debugging output
+        $('#questModalImage').attr('src', imageUrl);
+        $('#questImageModal').modal('show');
+        $('#approveBtn, #disapproveBtn').data('quest-id', questId);
+    });
+
+    // Approve action
+    $('#approveBtn').click(function () {
+        var questId = $(this).data('quest-id');
+        console.log("Approving quest ID:", questId);  // Debugging output
+        $.post(`/api/v1/approve-quest/${questId}`, function (response) {
+        
+            $('#questImageModal').modal('hide');
+            location.reload();
+        }).fail(function (xhr) {
+            alert("Error: " + xhr.responseText);
+        });
+    });
+
+    // Disapprove action
+    // Disapprove action
+$('#disapproveBtn').click(function () {
+    const questId = $(this).data('quest-id');
+    console.log("Disapproving quest ID:", questId); // Debugging output
+
+    $.post(`/api/v1/disapprove-quest/${questId}`, function (response) {
+        if (response.success) {
+       
+            // Remove the corresponding image and reset the screenshot field in the UI
+            $(`#quest-row-${questId}`).find('td').eq(7).text("No screenshot uploaded"); // Reset screenshot field
+            $('#questImageModal').modal('hide');
+        } else {
+            alert("Error: " + response.message);
+        }
+    }).fail(function (xhr) {
+        alert("Error: " + xhr.responseText);
+    });
+});
+
+
+
+    // General image view modal
+    $('.view-image').click(function () {
+        var imageUrl = $(this).data('image');
+        $('#modalImage').attr('src', imageUrl);
+        $('#imageModal').modal('show');
+    });
+});
+
+</script>

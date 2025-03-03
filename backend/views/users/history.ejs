@@ -1,0 +1,93 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4>User History - <%= userId %>
+                </h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <!-- <th > <center>Name</center></th> -->
+                            <th>Title</th> <!-- Added Title column -->
+                            <th>Type</th>
+                            <th>Activity</th>
+                            <th>Coins</th>
+                            <th>Pending Coins</th> <!-- Added Pending Coins column -->
+                            <th>description</th> <!-- Added Pending Coins column -->
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% let serialNumber=1; %>
+                            <% userHistory.forEach(entry=> { %>
+                                <tr>
+                                    <td>
+                                        <%= serialNumber++ %>
+                                    </td>
+
+                                    <td>
+                                        <%= entry.title || 'No Title' %>
+                                    </td> <!-- Display Title -->
+                                    <td>
+                                        <%= entry.quest_type || 'N/A' %>
+                                    </td>
+                                    <td>
+                                        <%= entry.activity || 'N/A' %>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-coins" style="color: gold; margin-right: 5px;"></i>
+                                        <%= entry.earn_coin || 0 %>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-coins" style="color: gold; margin-right: 5px;"></i>
+                                        <%= entry.pending_coin || 0 %>
+                                    </td> <!-- Display Pending Coins -->
+
+                                    <td>
+                                        <%= entry.description || 'No description' %>
+                                    </td>
+                                    <td>
+                                        <% if (entry.status==='completed' ) { %>
+                                            <span class="badge badge-success">Completed</span>
+                                            <% } else { %>
+                                                <span class="badge badge-warning">Pending</span>
+                                                <% } %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Viewing Images -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Screenshot Viewer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="Screenshot" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal logic for viewing screenshots
+    document.querySelectorAll('.view-image').forEach(button => {
+        button.addEventListener('click', function () {
+            const imageUrl = this.getAttribute('data-image');
+            document.getElementById('modalImage').setAttribute('src', imageUrl);
+            $('#imageModal').modal('show');
+        });
+    });
+</script>

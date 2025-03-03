@@ -1,0 +1,149 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4 class="header-title">Preview Quest - <%= blog.quest_name %>
+                </h4>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="row">
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="simpleinput" class="form-label">Quest</label>
+                                    <input type="text" id="simpleinput" class="form-control"
+                                        value="<%= blog.quest_name %>" readOnly>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="quest_type" class="form-label">Quest Type</label>
+                                    <select id="quest_type" name="quest_type" class="form-control" disabled>
+                                        <option value="banner" <%=blog.quest_type==='banner' ? 'selected' : '' %>>Banner
+                                        </option>
+                                        <option value="non-banner" <%=blog.quest_type==='non-banner' ? 'selected' : ''
+                                            %>>Non-Banner</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="activity" class="form-label">Activity</label>
+                                    <select id="activity" name="activity" class="form-control" disabled>
+                                        <option value="watch" <%=blog.activity==='watch' ? 'selected' : '' %>>Watch
+                                        </option>
+                                        <option value="follow" <%=blog.activity==='follow' ? 'selected' : '' %>>Follow
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="start_date" class="form-label">Start Date</label>
+                                    <input type="datetime-local" id="start_date" name="start_date" class="form-control"
+                                        value="<%= blog.start_date ? blog.start_date : '' %>" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="end_date" class="form-label">End Date</label>
+                                    <input type="datetime-local" id="end_date" name="end_date" class="form-control"
+                                        value="<%= blog.end_date ? blog.end_date : '' %>" disabled>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="social_media" class="form-label">Social Media</label>
+                                    <div>
+                                        <% const socialMedias=['Facebook', 'X' , 'Instagram' , 'LinkedIn' , 'Snapchat'
+                                            , 'YouTube' , 'Pinterest' , 'WhatsApp' ]; socialMedias.forEach(media=> {
+                                            %>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="social_media"
+                                                    id="social_media_<%= media %>" value="<%= media %>"
+                                                    <%=blog.social_media===media ? 'checked' : '' %>
+                                                disabled>
+                                                <label class="form-check-label" for="social_media_<%= media %>">
+                                                    <%= media %>
+                                                </label>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-lg-12 float-left">
+                                <div class="mb-3">
+                                    <label for="simpleinput" class="form-label">Quest URL</label>
+                                    <input type="text" id="simpleinput" name="quest_url" class="form-control"
+                                        value="<%= blog.quest_url %>" readOnly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 float-left">
+                                <div class="mb-3">
+                                    <label for="simpleinput" class="form-label">Coin Earn</label>
+                                    <input type="text" id="simpleinput" name="coin_earn" class="form-control"
+                                        value="<%= blog.coin_earn %>" readOnly>
+                                </div>
+                            </div>
+                        </div>
+                            
+                    <div class="row">
+                            <div class="col-lg-12 float-left">
+                                <div class="mb-3">
+                                    <label for="simpleinput" class="form-label">Image</label>
+                                    <textarea class="form-control" id="image" name="description"
+                                        readOnly><%= blog.image %></textarea>
+
+                                    <% if (blog.image) { %>
+                                        <img src="<%- '/uploads/' + module_slug + '/' + blog.image %>"
+                                            style="width:300px" /><br />
+                                        <input type="hidden" name="old_image" value="<%- blog.image %>">
+                                    
+                                        <% } else { %>
+                                            <p>No image available</p>
+                                            <% } %>
+                                </div>
+                            </div>
+                        </div> 
+
+
+
+
+
+                        <div class="row">
+                            <div class="col-lg-12 float-left">
+                                <div class="mb-3">
+                                    <label for="simpleinput" class="form-label">Desc</label>
+                                    <textarea class="form-control" id="editor" name="description"
+                                        readOnly><%= blog.description %></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div> <!-- end col -->
+
+
+            </div>
+            <!-- end row-->
+
+        </div> <!-- end card-body -->
+    </div> <!-- end card -->
+</div><!-- end col -->
+</div>

@@ -1,0 +1,294 @@
+<div class="left-side-menu" style="background-color: #2c3e50; color: white;">
+    <div class="h-100" data-simplebar>
+
+        <!-- User box -->
+        <div class="user-box text-center">
+
+            <!--  <img src="<%- process.env.BACKEND_URL %>/assets/images/users/user-1.jpg" alt="user-img" title="Mat Helme" class="rounded-circle img-thumbnail avatar-md">-->
+            <div class="dropdown">
+                <a href="#" class="user-name dropdown-toggle h5 mt-2 mb-1 d-block" data-bs-toggle="dropdown"
+                    style="color: white;" aria-expanded="false">Unitrade</a>
+                <div class="dropdown-menu user-pro-dropdown" style="background-color: #2c3e50;">
+
+                    <!-- item-->
+                    <a href="me" class="dropdown-item notify-item">
+                        <i class="fe-user me-1"></i>
+                        <span>My Account</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="/admin/settings" class="dropdown-item notify-item">
+                        <i class="fe-settings me-1"></i>
+                        <span>Settings</span>
+                    </a>
+
+
+                    <!-- item-->
+                    <a href="/admin/logout" class="dropdown-item notify-item">
+                        <i class="fe-log-out me-1"></i>
+                        <span>Logout</span>
+                    </a>
+
+                </div>
+            </div>
+
+            <p class=" left-user-info" style="color: white;">Admin</p>
+            <ul class="action_box" style="margin-right: 35px;">
+                <li class="list-inline-item">
+                    <a href="/admin/settings" class="text-muted left-user-info" title="settings">
+                        <i class="mdi mdi-cog" style="color: white;"></i>
+                    </a>
+                </li>
+
+                <li class="list-inline-item">
+                    <a href="/admin/logout" title="logout">
+                        <i class="mdi mdi-power" style="color: white;"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+
+            <ul id="side-menu">
+
+
+                <li class="dashboard-item">
+                    <a href="/admin/dashboard" class="dashboard-link">
+                        <i class="mdi mdi-view-dashboard-outline"></i>
+                        <span style="color: white;"> Dashboard </span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="#users" data-bs-toggle="collapse">
+                        <i class="fe-users" style="color: white;"></i>
+                        <span style="color: white;"> Users </span>
+                        <span class="menu-arrow" style="color: white;"></span>
+                    </a>
+                    <div class="collapse" id="users">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="/admin/users" style="color: white;">All Users</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <a href="#quests" data-bs-toggle="collapse">
+                        <i class="mdi mdi-file-multiple-outline" style="color: white;"></i>
+                        <span style="color: white;"> Quests </span>
+                        <span class="menu-arrow" style="color: white;"></span>
+                    </a>
+                    <div class="collapse" id="quests">
+                        <ul class="nav-second-level" style="color: white;">
+                            <li>
+                                <a href="/admin/quests" style="color: white;">All Quests</a>
+                            </li>
+                            <li>
+                                <a href="/admin/quests/add" style="color: white;">Add New</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+
+                <li>
+                    <a href="#testimonials" data-bs-toggle="collapse">
+                        <i class="fe-users" style="color: white;"></i>
+                        <span style="color: white;"> Tasks History </span>
+                        <span class="menu-arrow" style="color: white;"></span>
+                    </a>
+                    <div class="collapse" id="testimonials">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="/admin/testimonials" style="color: white;">Tasks History</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="#services" data-bs-toggle="collapse">
+                        <i class="mdi mdi-file-multiple-outline" style="color: white;"></i>
+                        <span style="color: white;"> Companies </span>
+                        <span class="menu-arrow" style="color: white;"></span>
+                    </a>
+                    <div class="collapse" id="services">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="/admin/companies" style="color: white;">All Companies</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <a href="#faqs" data-bs-toggle="collapse">
+                        <i class="mdi mdi-file-multiple-outline" style="color: white;"></i>
+                        <span style="color: white;">User Transactions </span>
+                        <span class="menu-arrow" style="color: white;"></span>
+                    </a>
+                    <div class="collapse" id="faqs">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="/admin/transactions" style="color: white;">All Transactions</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="#faqss" data-bs-toggle="collapse">
+                        <i class="mdi mdi-file-multiple-outline" style="color: white;"></i>
+                        <span style="color: white;">Company-Tran.</span>
+                        <span class="menu-arrow" style="color: white;"></span>
+                    </a>
+                    <div class="collapse" id="faqss">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="/admin/companytransactions" style="color: white;">All Company Transactions</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/settings" class="nav-link">
+                        <i class="mdi mdi-cog" style="color: white;"></i>
+
+
+                        <span style="color: white;"> Settings </span>
+                    </a>
+                </li>
+
+
+
+            </ul>
+
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="clearfix"></div>
+
+    </div>
+    <!-- Sidebar -left -->
+
+</div>
+
+
+
+<script>
+    // Remove the browser's default tooltip
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.action_box a');
+        links.forEach(link => {
+            const title = link.getAttribute('title');
+            if (title) {
+                link.setAttribute('data-title', title); // Move the title to data-title
+                link.removeAttribute('title'); // Remove the default title attribute
+            }
+        });
+    });
+</script>
+
+
+
+<style>
+    /* Container styling */
+    .action_box a {
+        position: relative;
+        display: inline-block;
+        margin: 0 5px;
+        text-decoration: none;
+        color: #6c757d;
+        /* Default icon color */
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    /* Hover effect on links */
+    .action_box a:hover {
+        transform: scale(1.2);
+        /* Slight scaling effect */
+        color: #007bff;
+        /* Change to a modern blue shade */
+    }
+
+    /* Text styling above the icon */
+    .action_box a::after {
+        content: attr(data-title);
+        /* Use a custom attribute for hover text */
+        position: absolute;
+        top: -35px;
+        /* Adjusts the text just above the icon */
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        /* Center text horizontally and hide initially */
+        background: rgba(0, 0, 0, 0.75);
+        /* Semi-transparent background */
+        color: #fff;
+        /* Text color */
+        font-size: 12px;
+        padding: 5px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        /* Prevent text wrapping */
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+        /* Prevent interaction with the text */
+        z-index: 10;
+        /* Ensure text appears above other elements */
+    }
+
+    /* Show the text smoothly on hover */
+    .action_box a:hover::after {
+        transform: translateX(-50%) scale(1);
+        /* Fully visible and centered */
+        opacity: 1;
+    }
+
+    /* General styles for all sidebar items */
+    .dashboard-item {
+        position: relative;
+        list-style: none;
+        /* Removes default list styling */
+    }
+
+    .dashboard-link {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        color: white;
+        /* Default text color */
+        text-decoration: none;
+        /* Removes underline from links */
+        border-radius: 5px;
+        /* Optional: Makes hover background look better */
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Hover effect */
+    .dashboard-item:hover .dashboard-link {
+        background-color: #34495e;
+        /* Light background color for hover */
+        color: #ecf0f1;
+        /* Slightly lighter text color on hover */
+    }
+
+    /* Ensures the icon and text remain white by default */
+    .dashboard-link i {
+        margin-right: 10px;
+        /* Adds spacing between the icon and text */
+        color: white;
+    }
+
+    /* Adjusts icon color on hover */
+    .dashboard-item:hover i {
+        color: #ecf0f1;
+        /* Matches hover text color */
+    }
+</style>

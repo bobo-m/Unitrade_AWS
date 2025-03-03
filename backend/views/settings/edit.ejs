@@ -1,0 +1,177 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4 class="header-title">
+                    <%= title %>
+                </h4>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form method="post" action="/admin/<%= module_slug %>/update/<%= blog.id %>"
+                            enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Site Title</label>
+                                        <input type="text" id="simpleinput" name="site_title" class="form-control"
+                                            value="<%= blog.site_title %>" required>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Email</label>
+                                        <input type="text" id="simpleinput" name="email" class="form-control"
+                                            value="<%= blog.email %>" required>
+                                    </div>
+                                </div> -->
+                            </div>
+
+                            <div class="row">
+                                <!-- <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Phone</label>
+                                        <input type="text" id="simpleinput" name="phone" class="form-control"
+                                            value="<%= blog.phone %>" required>
+                                    </div>
+                                </div> -->
+                                <!-- <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Address</label>
+                                        <input type="text" id="simpleinput" name="address" class="form-control"
+                                            value="<%= blog.address %>" required>
+                                    </div>
+                                </div> -->
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="header_logo_input" class="form-label">Header Logo</label>
+                                        <input type="file" id="header_logo_input" name="header_logo"
+                                            class="form-control">
+                                    </div>
+
+                                    <% if (blog.header_logo) { %>
+                                        <img src="<%- '/uploads/' + module_slug + '/' + blog.header_logo %>"
+                                            style="width:120px; margin-bottom:20px" /><br />
+                                        <input type="hidden" name="old_header_logo" value="<%- blog.header_logo %>">
+                                        <% } %>
+                                </div>
+
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="qr_code_input" class="form-label">QR Code</label>
+                                        <input type="file" id="qr_code_input" name="qr_code" class="form-control">
+                                    </div>
+
+                                    <% if (blog.qr_code) { %>
+                                        <img src="<%- '/uploads/' + module_slug + '/' + blog.qr_code %>"
+                                            style="width:120px; margin-bottom:20px" /><br />
+                                        <input type="hidden" name="old_qr_code" value="<%- blog.qr_code %>">
+                                        <% } %>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Upi Id</label>
+                                        <input type="text" id="simpleinput" name="upi" class="form-control"
+                                            value="<%= blog.upi %>" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Tap-Tap Coin Rate</label>
+                                        <input type="text" id="simpleinput" name="reduce_coin_rate" class="form-control"
+                                            value="<%= blog.reduce_coin_rate %>" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">One Coin Price</label>
+                                        <input type="text" id="simpleinput" name="one_coin_price" class="form-control"
+                                            value="<%= blog.one_coin_price %>" required>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Facehook Url</label>
+                                        <input type="text" id="simpleinput" name="fb_url" class="form-control"
+                                            value="<%= blog.fb_url %>">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Google Url</label>
+                                        <input type="text" id="simpleinput" name="google_url" class="form-control"
+                                            value="<%= blog.google_url %>">
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Linkdin Url</label>
+                                        <input type="text" id="simpleinput" name="linkdin_url" class="form-control"
+                                            value="<%= blog.linkdin_url %>">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Twitter Url</label>
+                                        <input type="text" id="simpleinput" name="twitter_url" class="form-control"
+                                            value="<%= blog.twitter_url %>">
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Default Meta Title</label>
+                                        <input type="text" id="simpleinput" name="default_meta_title"
+                                            class="form-control" value="<%= blog.default_meta_title %>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Default Meta Keyword</label>
+                                        <textarea class="form-control"
+                                            name="default_meta_keyword"><%= blog.default_meta_keyword %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Default Meta Description</label>
+                                        <textarea class="form-control"
+                                            name="default_meta_description"><%= blog.default_meta_description %></textarea>
+
+                                    </div>
+                                </div>
+                            </div> -->
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 float-left"><button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+
+                    </div>
+                    </form>
+                </div> <!-- end col -->
+
+
+            </div>
+            <!-- end row-->
+
+        </div> <!-- end card-body -->
+    </div> <!-- end card -->
+</div><!-- end col -->
+</div>

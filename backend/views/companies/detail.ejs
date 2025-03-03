@@ -1,0 +1,118 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4 class="header-title">Details - <%= user.user_name %>
+                </h4>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="user_name" class="form-label">User Name</label>
+                                    <input type="text" id="user_name" class="form-control" value="<%= user.user_name %>"
+                                        readOnly>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" id="email" class="form-control" value="<%= user.email %>"
+                                        readOnly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="date_created" class="form-label">Date Created</label>
+                                    <input type="text" id="date_created" class="form-control"
+                                        value="<%= user.date_created %>" readOnly>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="user_type" class="form-label">User Type</label>
+                                    <input type="text" id="user_type" class="form-control" value="<%= user.user_type %>"
+                                        readOnly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <input type="text" id="" class="form-control"
+                                        value="<%= typeof user.status !== 'undefined' && user.status !== null ? (parseInt(user.status) === 1 ? 'Active' : 'Inactive') : 'Status not available' %>"
+                                        readOnly />
+                                </div>
+                            </div>
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3">
+                                    <label for="mobile" class="form-label">Mobile</label>
+                                    <input type="text" id="mobile" class="form-control"
+                                        value="<%= typeof user.mobile !== 'undefined' ? user.mobile : 'Mobile not available' %>"
+                                        readOnly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Description</label>
+                                        <textarea class="form-control" id="" readOnly
+                                            name="description"><%= user.description %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+
+                <!-- Coin Rate Ranges Table -->
+                <div class="row mt-4">
+                    <div class="col-lg-12">
+                        <h5 class="header-title">Coin Rate Ranges</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Min Coins</th>
+                                    <th>Max Coins</th>
+                                    <th>Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (user.coin_rate_ranges && user.coin_rate_ranges.length> 0) { %>
+                                    <% user.coin_rate_ranges.forEach(range=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= range.min_coins %>
+                                            </td>
+                                            <td>
+                                                <%= range.max_coins %>
+                                            </td>
+                                            <td>
+                                                <%= range.rate %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="3" class="text-center">No coin rate ranges available
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <!-- end row -->
+            </div> <!-- end card-body -->
+        </div> <!-- end card -->
+    </div><!-- end col -->
+</div>

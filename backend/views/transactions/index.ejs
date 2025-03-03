@@ -1,0 +1,225 @@
+<div class="row"></div>
+<div class="col-12">
+    <div class="card">
+        <div class="card-body table-responsive">
+            <div class="row page_top_bar">
+                <div class="col-12">
+                    <div class="col-6 heading float-left">
+                        <h4 class="mt-0 header-title">Transactions</h4>
+                    </div>
+                </div>
+            </div>
+
+            <table id="responsive-datatable" class="table table-bordered table-bordered dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>User Name</th>
+                        <th>Company Name</th>
+                        <th>UPI ID</th>
+                        <th>Amount</th>
+                        <th>Transaction Coin</th>
+                        <th>Status</th>
+                        <th>Transaction Document</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% let serialNumber=1; %>
+                        <% transactions.forEach(transactions=> { %>
+                            <tr id="transactions-row-<%= transactions.user_id %>">
+                                <td>
+                                    <%= serialNumber++ %>
+                                </td>
+                                <td>
+                                    <%= transactions.user_name %>
+                                </td>
+                                <td>
+                                    <%= transactions.company_name %>
+                                </td>
+                                <td>
+                                    <%= transactions.upi_id || 'N/A' %>
+                                </td>
+
+
+                                <td>
+                                    <%= transactions.transaction_amount %>
+                                </td>
+                       
+                                <td>
+                                    <i class="fas fa-money-bill-wave" style="color: #28a745;"></i> <!-- Money Icon -->
+
+                                    <%= transactions.transaction_coin || 'N/A' %>
+                                </td>
+                                <td>
+                                    <%= transactions.transaction_status %>
+                                </td>
+                                <td>
+                                    <% if (transactions.trans_doc) { %>
+                                        <button class="btn btn-info view-image"
+                                             data-image="<%- process.env.BACKEND_URL %>uploads/<%= transactions.trans_doc %>">
+                                            View Screenshot
+                                        </button>
+                                         
+                                        <% } else { %>
+                                            No document uploaded
+                                            <% } %>
+                                </td>
+                                <td>
+                                    <% if (transactions.transaction_status !=='approved' ) { %>
+                                        <button class="btn btn-success approve-btn"
+                                            data-id="<%= transactions.transaction_id %>"
+                                            data-row-id="transactions-row-<%= transactions.transaction_id %>">
+                                            Approve
+                                        </button>
+                                        <% } else { %>
+                                            Approved
+                                            <% } %>
+                                </td>
+
+
+                            </tr>
+                            <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Modal for viewing documents- --->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="docModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Transaction Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Transaction Document" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+
+        // Show modal with the clicked image
+        $('.view-image').click(function () {
+            var imageUrl = $(this).data('image');
+            $('#modalImage').attr('src', imageUrl);
+            $('#imageModal').modal('show');
+        });
+    });
+</script>
+<style>
+    /* Container styling */
+    .action_box a {
+        position: relative;
+        display: inline-block;
+        margin: 0 5px;
+        text-decoration: none;
+        color: #6c757d;
+        /* Default icon color */
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    /* Hover effect on links */
+    .action_box a:hover {
+        transform: scale(1.2);
+        /* Slight scaling effect */
+        color: #007bff;
+        /* Change to a modern blue shade */
+    }
+
+    /* Text styling above the icon */
+    .action_box a::after {
+        content: attr(data-title);
+        /* Use a custom attribute for hover text */
+        position: absolute;
+        top: -35px;
+        /* Adjusts the text just above the icon */
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        /* Center text horizontally and hide initially */
+        background: rgba(0, 0, 0, 0.75);
+        /* Semi-transparent background */
+        color: #fff;
+        /* Text color */
+        font-size: 12px;
+        padding: 5px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        /* Prevent text wrapping */
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+        /* Prevent interaction with the text */
+        z-index: 10;
+        /* Ensure text appears above other elements */
+    }
+
+    /* Show the text smoothly on hover */
+    .action_box a:hover::after {
+        transform: translateX(-50%) scale(1);
+        /* Fully visible and centered */
+        opacity: 1;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('.approve-btn').click(function (e) {
+            e.preventDefault(); // Prevent default form submission
+            const button = $(this);
+            const transactionId = button.data('id'); // Get the transaction ID
+            const rowId = button.data('row-id'); // Get the row ID
+
+            if (transactionId === undefined || transactionId === null) {
+                alert("Transaction ID is missing.");
+                return;
+            }
+
+            // Immediately change the button text to 'Processing...'
+            button.text('Processing...');
+            button.prop('disabled', true); // Disable button to prevent multiple clicks
+
+            if (confirm("Are you sure you want to approve this transaction?")) {
+                $.ajax({
+                    url: '/api/v1/approveTransaction', // Your API endpoint
+                    method: 'POST',
+                    contentType: 'application/json', // Send data as JSON
+                    data: JSON.stringify({ id: transactionId }), // Send the transaction ID as JSON
+                    success: function (response) {
+                        if (response.success) {
+                            // Update the button text to 'Approved' after success
+                            button.text('Approved');
+                            button.removeClass('btn-success').addClass('btn-secondary'); // Optional: Change button color
+                        } else {
+                            alert('Error approving the transaction');
+                            button.text('Approve');
+                            button.prop('disabled', false);
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error('Error:', xhr);
+                        alert('An error occurred. Please try again.');
+                        button.text('Approve');
+                        button.prop('disabled', false);
+                    }
+                });
+            } else {
+                // If the user cancels, revert to the original state
+                button.text('Approve');
+                button.prop('disabled', false);
+            }
+        });
+    });
+</script>

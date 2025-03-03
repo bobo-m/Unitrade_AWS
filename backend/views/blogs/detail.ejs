@@ -1,0 +1,77 @@
+
+  <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title">Preview Blog - <%= blog.title %></h4>
+                            
+                            
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    
+                                        <div class="row">
+                                        <div class="col-lg-6 float-left">
+                                            <div class="mb-3">
+                                                <label for="simpleinput" class="form-label">Title</label>
+                                                <input type="text" id="simpleinput"  class="form-control" value="<%= blog.title %>" readOnly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 float-left">
+                                            <div class="mb-3">
+                                                <label for="simpleinput" class="form-label">Slug</label>
+                                                <input type="text" id="simpleinput" name="slug" class="form-control" value="<%= blog.slug %>" readOnly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                       
+                                    <div class="row">
+                                        <div class="col-lg-6 float-left">
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 float-left">
+                                            <div class="mb-3">
+                                                <label for="simpleinput" class="form-label">Desc</label>
+                                                <textarea  class="form-control" id="editor" name="description" readOnly><%= blog.description %></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 float-left">
+                                            <div class="mb-3">
+                                                <label for="simpleinput" class="form-label">Meta Title</label>
+                                                <input type="text" id="simpleinput" name="meta_title" class="form-control" value="<%= blog.meta_title %>" readOnly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 float-left">
+                                            <div class="mb-3">
+                                                <label for="simpleinput" class="form-label">Meta Keyword</label>
+                                                <textarea class="form-control" name="meta_keyword" readOnly><%= blog.meta_keyword %></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 float-left">
+                                            <div class="mb-3">
+                                                <label for="simpleinput" class="form-label">Meta Description</label>
+                                                <textarea class="form-control" name="meta_description" readOnly><%= blog.meta_description %></textarea>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    
+                                </div> <!-- end col -->
+
+                              
+                            </div>
+                            <!-- end row-->
+
+                        </div> <!-- end card-body -->
+                    </div> <!-- end card -->
+                </div><!-- end col -->
+            </div>
+           

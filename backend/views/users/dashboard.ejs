@@ -1,0 +1,418 @@
+<style>
+    /* Custom Styles for modern design */
+    body {
+        font-family: 'Arial', sans-serif;
+    }
+
+    .row {
+
+
+        align-items: stretch;
+        margin-top: 20px;
+    }
+
+
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+
+
+    .header-title {
+        font-size: 18px;
+        color: #444;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .widget-chart-1,
+    .widget-box-2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1;
+    }
+
+    .widget-chart-box-1 {
+        margin-right: 20px;
+    }
+
+    .widget-detail-1 {
+        text-align: right;
+    }
+
+    .widget-detail-1 h2 {
+        font-size: 32px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .widget-detail-1 p {
+        color: #777;
+        font-size: 14px;
+    }
+
+    .badge {
+        font-size: 12px;
+        font-weight: bold;
+        padding: 6px 12px;
+    }
+
+    .progress {
+        height: 6px;
+        border-radius: 10px;
+    }
+
+    .progress-bar {
+        border-radius: 10px;
+    }
+
+    .widget-box-2 {
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .widget-box-2 .progress-bar {
+        height: 8px;
+    }
+
+    .widget-chart-box-1 input {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+</style>
+
+<!-- ============================================================== -->
+<!-- Start Page Content here -->
+<!-- ============================================================== -->
+
+<div class="row" style="width: 1700px;">
+    <!-- Total Users -->
+    <div class="col-xl-3">
+        <a href="/admin/users">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Total Users</h4>
+                    <div class="widget-chart-1">
+                        <div class="widget-chart-box-1" dir="ltr">
+                            <input data-plugin="knob" data-width="70" data-height="70" data-fgColor="#f05050"
+                                data-bgColor="#F9B9B9" value="<%= totalUsers %>" data-skin="tron" data-angleOffset="180"
+                                data-readOnly="true" data-thickness=".15" />
+                        </div>
+                        <div class="widget-detail-1">
+                            <h2 class="fw-normal">
+                                <%= totalUsers %>
+                            </h2>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div><!-- end col -->
+
+    <!-- Total Quests -->
+    <div class="col-xl-3 col-md-6">
+        <a href="/admin/quests">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Total Quests</h4>
+                    <div class="widget-chart-1">
+                        <div class="widget-chart-box-1" dir="ltr">
+                            <input data-plugin="knob" data-width="70" data-height="70" data-fgColor="#f05050"
+                                data-bgColor="#F9B9B9" value="<%= totalQuests %>" data-skin="tron"
+                                data-angleOffset="180" data-readOnly="true" data-thickness=".15" />
+                        </div>
+                        <div class="widget-detail-1">
+                            <h2 class="fw-normal">
+                                <%= totalQuests %>
+                            </h2>
+                            <p>Total Quests</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </a>
+    </div><!-- end col -->
+
+
+    <!-- Total Companies -->
+    <div class="col-xl-3 col-md-6">
+        <a href="/admin/companies">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Total Companies</h4>
+                    <div class="widget-chart-1">
+                        <div class="widget-chart-box-1" dir="ltr">
+                            <input data-plugin="knob" data-width="70" data-height="70" data-fgColor="#ffbd4a"
+                                data-bgColor="#FFE6BA" value="<%= totalCompanies %>" data-skin="tron"
+                                data-angleOffset="180" data-readOnly="true" data-thickness=".15" />
+                        </div>
+                        <div class="widget-detail-1">
+                            <h2 class="fw-normal">
+                                <%= totalCompanies %>
+                            </h2>
+                            <p>Total Companies</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div><!-- end col -->
+
+</div>
+
+<div class="row" style="width: 1700px;">
+    <div class="col-xl-3 col-md-6">
+        <a href="/admin/users">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Pending Active Requests</h4>
+                    <div class="widget-chart-1">
+                        <div class="widget-chart-box-1" dir="ltr">
+                            <input data-plugin="knob" data-width="70" data-height="70" data-fgColor="#ffbd4a"
+                                data-bgColor="#FFE6BA" value="<%= pendingUsers %>" data-skin="tron"
+                                data-angleOffset="180" data-readOnly="true" data-thickness=".15" />
+                        </div>
+                        <div class="widget-detail-1">
+                            <h2 class="fw-normal">
+                                <%= pendingUsers %>
+                            </h2>
+                            <p>Pending Active Requests</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div><!-- end col -->
+    <div class="col-xl-3 col-md-6">
+        <a href="/admin/transactions">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Pending Company Req.</h4>
+                    <div class="widget-chart-1">
+                        <div class="widget-chart-box-1" dir="ltr">
+                            <input data-plugin="knob" data-width="70" data-height="70" data-fgColor="#ffbd4a"
+                                data-bgColor="#FFE6BA" value="<%= pendingCompany %>" data-skin="tron"
+                                data-angleOffset="180" data-readOnly="true" data-thickness=".15" />
+                        </div>
+                        <div class="widget-detail-1">
+                            <h2 class="fw-normal">
+                                <%= pendingCompany %>
+                            </h2>
+                            <p>Pending Company Req.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div><!-- end col -->
+
+    <div class="col-xl-3 col-md-6">
+        <a href="/admin/testimonials">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">Pending Tasks Req.</h4>
+                    <div class="widget-chart-1">
+                        <div class="widget-chart-box-1" dir="ltr">
+                            <input data-plugin="knob" data-width="70" data-height="70" data-fgColor="#ffbd4a"
+                                data-bgColor="#FFE6BA" value="<%= questApproval %>" data-skin="tron"
+                                data-angleOffset="180" data-readOnly="true" data-thickness=".15" />
+                        </div>
+                        <div class="widget-detail-1">
+                            <h2 class="fw-normal">
+                                <%= questApproval %>
+                            </h2>
+                            <p>Pending Tasks Req..</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div><!-- end col -->
+</div>
+
+<div class="row" style="width: 1700px;">
+
+    <div class="col-xl-6 col-md-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h4 class="header-title">Admin Coin Revenue Progress</h4>
+                <canvas id="modernBarChart" height="100"></canvas>
+                <p class="mt-3">
+                    Target Coins: <strong>
+                        <%= finalValue %>
+                    </strong><br />
+                    Current Progress: <strong>
+                        <%= totalMultiplier %>
+                    </strong> Coins<br />
+                    <!-- Display Progress Percentage in HTML -->
+                <p>Progress: <strong>
+                        <%= ((totalMultiplier / finalValue) * 100).toFixed(2) %>
+                    </strong>%</p>
+
+                <!-- You can place this inside your HTML structure where you want to display the progress -->
+
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+</div>
+<!-- ============================================================== -->
+<!-- End Page Content here -->
+<!-- ============================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Values from the backend
+        const finalValue = <%= finalValue %>;  // Replace with server-side value
+        const totalMultiplier = <%= totalMultiplier %>;  // Replace with server-side value
+
+        // Debugging: Log values to ensure they are coming through correctly
+        console.log("finalValue:", finalValue);
+        console.log("totalMultiplier:", totalMultiplier);
+
+        // Check if finalValue and totalMultiplier are valid numbers
+        if (isNaN(finalValue) || isNaN(totalMultiplier)) {
+            console.error("Invalid value for finalValue or totalMultiplier.");
+            return;
+        }
+
+        // Calculate the percentage of target achieved
+        const progressPercentage = (totalMultiplier / finalValue) * 100;
+
+        // Log the calculated progress percentage
+        console.log("Calculated Progress Percentage:", progressPercentage);
+
+        // Ensure a minimum percentage to avoid showing 0%
+        const safeProgressPercentage = Math.max(progressPercentage, 0.1);  // Prevent 0% from showing
+        const displayMultiplier = Math.max(totalMultiplier, 0.1);  // Display a small value if necessary
+
+        console.log("Safe Progress Percentage:", safeProgressPercentage);
+
+        // Chart.js Configuration
+        const ctx = document.getElementById('modernBarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Revenue Progress'],  // Label for the X-axis
+                datasets: [
+                    {
+                        label: `Achieved Revenue (${safeProgressPercentage.toFixed(2)}%)`,  // Show percentage in label
+                        data: [displayMultiplier],  // Progress bar data
+                        backgroundColor: 'rgba(0, 204, 255, 0.6)',  // Light blue for progress
+                        borderColor: 'rgba(0, 204, 255, 1)',
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Target Revenue (Full Bar)',
+                        data: [finalValue - totalMultiplier],  // Remaining coins to reach target
+                        backgroundColor: 'rgba(255, 99, 132, 0.3)',  // Light red for remaining
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const percentage = (context.raw / finalValue) * 100;
+                                return `${context.dataset.label}: ${context.raw} coins (${percentage.toFixed(2)}%)`;
+                            },
+                        },
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                },
+                scales: {
+                    x: {
+                        stacked: true,  // Stack the bars to show target vs progress
+                        title: {
+                            display: true,
+                            text: 'Revenue Progress',
+                            font: {
+                                size: 14,
+                            },
+                            color: '#666',
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: finalValue > 0 ? finalValue : 1,  // Dynamic Y-axis max value based on target
+                        title: {
+                            display: true,
+                            text: 'Coins (Revenue)',
+                            font: {
+                                size: 14,
+                            },
+                            color: '#666',
+                        },
+                    },
+                },
+            },
+        });
+    });
+</script>
+
+
+
+
+
+<style>
+    .progress-bar-container {
+        width: 100%;
+        height: 30px;
+        background-color: rgba(54, 162, 235, 0.2);
+        border: 1px solid rgba(54, 162, 235, 1);
+        border-radius: 5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar-filled {
+        height: 100%;
+        background-color: rgba(255, 99, 132, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+        white-space: nowrap;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .progress-text {
+        position: absolute;
+        right: 10px;
+        color: black;
+        font-size: 12px;
+    }
+</style>

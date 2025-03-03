@@ -1,0 +1,237 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4 class="header-title">Company Add</h4>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form id="companyForm" method="post" action="/admin/<%= module_slug %>/add"
+                            enctype="application/x-www-form-urlencoded">
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="user_name" class="form-label">Name</label>
+                                        <input type="text" id="user_name" name="user_name" class="form-control"
+                                            value="">
+                                        <small class="text-danger" id="nameError"></small>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="mobile" class="form-label">Mobile No.</label>
+                                        <input type="text" id="mobile" name="mobile" class="form-control" value="">
+                                        <small class="text-danger" id="mobileError"></small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="text" id="email" name="email" class="form-control">
+                                        <small class="text-danger" id="emailError"></small>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="text" id="password" name="password" class="form-control" value="">
+                                        <small class="text-danger" id="passwordError"></small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="upi" class="form-label">UPI id</label>
+                                        <input type="text" id="upi" name="upi" class="form-control" value="">
+                                        <small class="text-danger" id="upiError"></small>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Dynamic Coin Ranges -->
+                            <!-- Dynamic Coin Ranges -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="form-label">Coin Ranges</label>
+                                    <div id="coinRangeContainer">
+                                        <!-- Default Range -->
+                                        <div class="coin-range mb-3">
+                                            <input type="number" class="form-control d-inline-block w-25"
+                                                name="coin_rate_ranges[start][]" placeholder="Start Range" min="0"
+                                                required>
+                                            <input type="number" class="form-control d-inline-block w-25"
+                                                name="coin_rate_ranges[end][]" placeholder="End Range" min="0" required>
+                                            <input type="" class="form-control d-inline-block w-25"
+                                                name="coin_rate_ranges[rate][]" placeholder="Rate (₹)" required>
+
+                                            <button type="button"
+                                                class="btn btn-danger btn-sm remove-range">Remove</button>
+                                        </div>
+                                    </div>
+                                
+                                    <small class="text-danger" id="coinRangeError"></small>
+
+                                    <!-- Hidden input to submit coin_rate_ranges even if no range is added -->
+                                    <input type="hidden" id="coinRateRangesHidden" name="coin_rate_ranges" value="">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Desc</label>
+                                        <textarea class="form-control" id="editor" name="description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-control" name="status" id="status">
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-4 float-left">
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add dynamic range
+    document.getElementById('addRange').addEventListener('click', () => {
+        const rangeContainer = document.getElementById('coinRangeContainer');
+        const rangeDiv = document.createElement('div');
+        rangeDiv.className = 'coin-range mb-3';
+        rangeDiv.innerHTML = `
+            <input type="number" class="form-control d-inline-block w-25" name="coin_rate_ranges[start][]" placeholder="Start Range" min="0" required>
+            <input type="number" class="form-control d-inline-block w-25" name="coin_rate_ranges[end][]" placeholder="End Range" min="0" required>
+            <input type="number" class="form-control d-inline-block w-25" name="coin_rate_ranges[rate][]" placeholder="Rate (₹)" min="0" required>
+
+        `;
+        rangeContainer.appendChild(rangeDiv);
+
+        // Add event listener to remove button
+        rangeDiv.querySelector('.remove-range').addEventListener('click', () => rangeDiv.remove());
+    });
+
+    // Form validation
+    document.getElementById('companyForm').addEventListener('submit', (event) => {
+        let isValid = true;
+        document.getElementById('coinRangeError').textContent = ''; // Clear previous error message
+
+        // Validate ranges
+        const ranges = document.querySelectorAll('.coin-range');
+        let coinRangesData = [];
+
+        ranges.forEach((range) => {
+            const start = range.querySelector('[name="coin_rate_ranges[start][]"]').value;
+            const end = range.querySelector('[name="coin_rate_ranges[end][]"]').value;
+            const rate = range.querySelector('[name="coin_rate_ranges[rate][]"]').value;
+
+            // Collect all ranges if valid
+            if (start && end && rate && Number(start) < Number(end)) {
+                coinRangesData.push({ start, end, rate });
+            } else {
+                document.getElementById('coinRangeError').textContent = 'All ranges must be valid. Ensure start < end and all fields are filled.';
+                isValid = false;
+            }
+        });
+
+        // If no valid ranges, set the hidden field as empty string
+        if (coinRangesData.length === 0) {
+            document.getElementById('coinRateRangesHidden').value = '';
+        } else {
+            // Otherwise, set the valid ranges as JSON string
+            document.getElementById('coinRateRangesHidden').value = JSON.stringify(coinRangesData);
+        }
+
+        // Prevent form submission if validation fails
+        if (!isValid) event.preventDefault();
+    });
+</script>
+
+<script>
+    document.getElementById('companyForm').addEventListener('submit', function (event) {
+        let isValid = true;
+
+        // Clear previous error messages
+        document.querySelectorAll('.text-danger').forEach(error => error.textContent = '');
+
+        // Name validation
+        const userName = document.getElementById('user_name').value.trim();
+        if (!userName) {
+            document.getElementById('nameError').textContent = 'Name is required.';
+            isValid = false;
+        }
+
+        // Mobile validation
+        const mobile = document.getElementById('mobile').value.trim();
+        if (!/^\d{10}$/.test(mobile)) {
+            document.getElementById('mobileError').textContent = 'Enter a valid 10-digit mobile number.';
+            isValid = false;
+        }
+
+        // Email validation
+        const email = document.getElementById('email').value.trim();
+        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+            document.getElementById('emailError').textContent = 'Enter a valid email address.';
+            isValid = false;
+        }
+        // Coin Range validation
+        const ranges = document.querySelectorAll('.coin-range');
+        ranges.forEach((range) => {
+            const start = range.querySelector('[name="coin_rate_ranges[start][]"]').value;
+            const end = range.querySelector('[name="coin_rate_ranges[end][]"]').value;
+            const rate = range.querySelector('[name="coin_rate_ranges[rate][]"]').value;
+
+            if (!start || !end || !rate || Number(start) >= Number(end) || Number(rate) <= 0) {
+                document.getElementById('coinRangeError').textContent = 'All ranges must be valid. Ensure start < end, rate > 0, and all fields are filled.';
+                isValid = false;
+            }
+        });
+        // Password validation
+        const password = document.getElementById('password').value.trim();
+        if (password.length < 6) {
+            document.getElementById('passwordError').textContent = 'Password must be at least 6 characters.';
+            isValid = false;
+        }
+
+        // UPI ID validation
+        const upi = document.getElementById('upi').value.trim();
+        if (upi && !/^[\w\.\-]+@[\w\.\-]+$/.test(upi)) {
+            document.getElementById('upiError').textContent = 'Enter a valid UPI ID (e.g., user@bank).';
+            isValid = false;
+        }
+
+        // Coin Rate validation
+        const coinRate = document.getElementById('coin_rate').value.trim();
+        if (isNaN(coinRate) || coinRate <= 0) {
+            document.getElementById('coinRateError').textContent = 'Coin Rate must be a positive number.';
+            isValid = false;
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+</script>

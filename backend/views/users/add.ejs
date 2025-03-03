@@ -1,0 +1,100 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4 class="header-title">
+                    <%= title %>
+                </h4>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form method="post" action="/admin/<%= module_slug %>/add"
+                            enctype="application/x-www-form-urlencoded">
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Name</label>
+                                        <input type="text" id="simpleinput" name="user_name" class="form-control"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Mobile No.</label>
+                                        <input type="text" id="simpleinput" name="mobile" class="form-control" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Email</label>
+                                        <input type="text" id="simpleinput" name="email" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Password</label>
+                                        <input type="text" id="simpleinput" name="password" class="form-control"
+                                            value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">UPI id</label>
+                                        <input type="text" id="simpleinput" name="upi" class="form-control" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Referral By</label>
+                                        <input type="text" id="simpleinput" name="referral_by" class="form-control"
+                                            value="">
+                                    </div>
+                                </div>
+
+
+
+                               <!-- <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Status</label>
+                                        <select class="form-control" name="status">
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div> -->
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Status</label>
+                                        <select class="form-control" name="status">
+                                            <option value="0" selected>Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4 float-left">
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row-->
+            </div> <!-- end card-body -->
+        </div> <!-- end card -->
+    </div><!-- end col -->
+</div>

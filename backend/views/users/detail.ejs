@@ -1,0 +1,102 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4 class="header-title">User Details - <%= user.user_name %>
+                </h4>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">User Name</label>
+                            <input type="text" id="user_name" class="form-control" value="<%= user.user_name %>"
+                                readOnly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" id="email" class="form-control" value="<%= user.email %>" readOnly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="text" id="mobile" class="form-control" value="<%= user.mobile %>" readOnly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">User Role</label>
+                            <input type="text" id="user_type" class="form-control" value="<%= user.user_type %>"
+                                readOnly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="parent_id" class="form-label">Parent ID</label>
+                            <input type="text" id="parent_id" class="form-control"
+                                value="<%=  parseInt(user.parent_id, 10) %>" readOnly>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="referral_by" class="form-label">Referral By</label>
+                            <input type="text" id="referral_by" class="form-control" value="<%= user.referral_by %>"
+                                readOnly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="referral_code" class="form-label">Referral Code</label>
+                            <input type="text" id="referral_code" class="form-control" value="<%= user.referral_code %>"
+                                readOnly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="coins" class="form-label">Coins</label>
+                            <input type="text" id="coins" class="form-control" value="<%= user.coins %>" readOnly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="pending_coins" class="form-label">Pending Coins</label>
+                            <input type="text" id="pending_coins" class="form-control"
+                                value="<%= parseInt(user.pending_coin, 10) %>" readOnly>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="upi_id" class="form-label">UPI ID</label>
+                            <input type="text" id="upi_id" class="form-control" value="<%= user.upi_id %>" readOnly>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="upi_id" class="form-label">Transaction Id</label>
+                            <input type="text" id="transaction_id" class="form-control"
+                                value="<%= user.transaction_id %>" readOnly>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="upi_id" class="form-label">UTR No.</label>
+                            <input type="text" id="utr_no" class="form-control" value="<%= user.utr_no %>" readOnly>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

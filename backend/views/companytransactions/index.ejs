@@ -1,0 +1,129 @@
+<div class="row"></div>
+<div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body table-responsive">
+
+            <div class="row page_top_bar">
+                <div class="col-12">
+                    <div class="col-6 heading float-left">
+                        <h4 class="mt-0 header-title">Company-Transactions</h4>
+                    </div>
+                </div>
+            </div>
+
+            <table id="responsive-datatable" class="table table-bordered table-bordered dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Company Name</th>
+                        <th>UPI ID</th>
+                        <th>Sell Coins</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% let serialNumber=1; %>
+                        <% companytransactions.forEach(companytransactions=> { %>
+                            <tr id="transactions-row-<%= companytransactions.transaction_id %>">
+                                <td>
+                                    <%= serialNumber++ %>
+                                </td>
+                                <td>
+                                    <%= companytransactions.user_name %>
+                                </td>
+                                <td>
+                                    <%= companytransactions.upi_id || 'N/A' %>
+                                </td>
+
+
+                                <td>
+                                    <i class="fas fa-money-bill-wave" style="color: #28a745;"></i> <!-- Money Icon -->
+
+                                    <%= companytransactions.sell_coin %>
+                                </td>
+
+                                <td>
+                                    <%= companytransactions.status %>
+                                </td>
+
+                                <td>
+                                    <% if (companytransactions.status !=='approved' ) { %>
+                                        <button class="btn btn-success approve-btn"
+                                            data-id="<%= companytransactions.transaction_id %>"
+                                            data-row-id="companytransactions-row-<%= companytransactions.transaction_id %>">
+                                            Approve
+                                        </button>
+                                        <% } else { %>
+                                            Approved
+                                            <% } %>
+                                </td>
+
+                            </tr>
+                            <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Modal for viewing documents- --->
+<div class="modal fade" id="docModal" tabindex="-1" role="dialog" aria-labelledby="docModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="docModalLabel">Transaction Document</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalDoc" src="" alt="Transaction Document" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Show modal with the clicked document
+        $('.view-doc').click(function () {
+            var docUrl = $(this).data('doc');
+            $('#modalDoc').attr('src', docUrl);
+            $('#docModal').modal('show');
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Approve button click handler
+        $('.approve-btn').click(function () {
+            const companyId = $(this).data('id');
+            const rowId = $(this).data('row-id');
+
+            // Make the POST request
+            $.ajax({
+                url: '<%- process.env.BACKEND_URL %>api/v1/approvecompanyTransaction', // Endpoint for the approve API
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ transaction_id: companyId }),
+                success: function (response) {
+                    if (response.success) {
+                        // Update the UI
+                        const row = $(`#${rowId}`);
+                        row.find('.approve-btn').remove(); // Remove the button
+                        row.find('td:nth-child(7)').text('Approved'); // Update status
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Approval failed:', error);
+                    alert('Something went wrong! Please try again.\n' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

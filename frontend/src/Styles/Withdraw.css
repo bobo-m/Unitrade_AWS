@@ -1,0 +1,24 @@
+/* Define the Spark Animation */
+@keyframes sparkAnimation {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Spark Background Styling */
+.spark-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://example.com/spark-image.png') repeat;
+  background-size: 30px 30px;  /* Adjust for your spark image size */
+  animation: sparkAnimation 3s infinite ease-in-out;
+  z-index: -1; /* Ensure it stays in the background */
+}

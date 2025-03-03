@@ -1,0 +1,164 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body table-responsive">
+                <div class="row page_top_bar">
+                    <div class="col-12">
+                        <div class="col-6 heading float-left">
+                            <h4 class="mt-0 header-title">
+                                <%= title %>
+                            </h4>
+                        </div>
+                        <div class="col-6 btns float-left text-right">
+                            <a class="btn btn-primary" href="/admin/<%= module_slug %>/add">Add New</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <table id="responsive-datatable" class="table table-bordered table-bordered dt-responsive nowrap">
+                    <thead>
+
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Quest Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Coins Earned</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+                        <% let serialNumber=1; %>
+                            <% quests[0].forEach(function(quest) { %>
+                                <tr>
+                                    <td>
+                                        <%= serialNumber++ %>
+                                    </td>
+                                    <td>
+                                        <%= quest.quest_name %>
+                                    </td>
+                                    <td>
+                                        <%= quest.start_date %>
+                                    </td>
+                                    <td>
+                                        <%= quest.end_date %>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-coins" style="color: gold; margin-right: 5px;"></i>
+
+                                        <%= quest.coin_earn %>
+                                    </td>
+                                    <td class="status_box">
+                                        <% if(quest.status=='active' ){ %>
+                                            <span
+                                                class="btn btn-success rounded-pill waves-effect waves-light">Active</span>
+                                            <% }else{ %>
+                                                <span
+                                                    class="btn btn-danger rounded-pill waves-effect waves-light">Inactive</span>
+                                                <% } %>
+                                                    <!-- <div class="switchery-toggle">
+                                    <input type="checkbox" id="switchd" class="toogle_checkbox" value="0" /><label for="switch">Status</label>
+                                </div>-->
+                                    </td>
+
+                                    <td class="action_box">
+                                        <a href="/admin/<%= module_slug %>/<%= quest.id %>" title="View Details">
+                                            <i class="fe-eye"></i>
+                                        </a>
+                                        <a href="/admin/<%= module_slug %>/edit/<%= quest.id %>" title="Edit Quest">
+                                            <i class="fe-edit"></i>
+                                        </a>
+                                        <a href="/admin/<%= module_slug %>/delete/<%= quest.id %>" title="Delete Quest">
+                                            <i class="fe-trash-2"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div> <!-- end row -->
+
+
+
+
+
+
+<style>
+    /* Container styling */
+    .action_box a {
+        position: relative;
+        display: inline-block;
+        margin: 0 5px;
+        text-decoration: none;
+        color: #6c757d;
+        /* Default icon color */
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    /* Hover effect on links */
+    .action_box a:hover {
+        transform: scale(1.2);
+        /* Slight scaling effect */
+        color: #007bff;
+        /* Change to a modern blue shade */
+    }
+
+    /* Text styling above the icon */
+    .action_box a::after {
+        content: attr(data-title);
+        /* Use a custom attribute for hover text */
+        position: absolute;
+        top: -35px;
+        /* Adjusts the text just above the icon */
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        /* Center text horizontally and hide initially */
+        background: rgba(0, 0, 0, 0.75);
+        /* Semi-transparent background */
+        color: #fff;
+        /* Text color */
+        font-size: 12px;
+        padding: 5px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        /* Prevent text wrapping */
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+        /* Prevent interaction with the text */
+        z-index: 10;
+        /* Ensure text appears above other elements */
+    }
+
+    /* Show the text smoothly on hover */
+    .action_box a:hover::after {
+        transform: translateX(-50%) scale(1);
+        /* Fully visible and centered */
+        opacity: 1;
+    }
+</style>
+
+<!-- JavaScript to prevent default browser tooltip -->
+<script>
+    // Remove the browser's default tooltip
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.action_box a');
+        links.forEach(link => {
+            const title = link.getAttribute('title');
+            if (title) {
+                link.setAttribute('data-title', title); // Move the title to data-title
+                link.removeAttribute('title'); // Remove the default title attribute
+            }
+        });
+    });
+</script>

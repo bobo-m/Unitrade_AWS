@@ -1,0 +1,50 @@
+<footer class="footer bg-light py-2">
+    <div class="container-fluid">
+        <div class="row align-items-center" style="margin-top: -1px;">
+            <!-- Left Section -->
+            <div class="col-md-6 text-center text-md-start" style=" padding-bottom: 5px; color: #2c3e50;">
+                &copy; <span id="currentYear"></span> <strong>Unitrade</strong>. All Rights Reserved.
+            </div>
+            <!-- Right Section -->
+            <div class="col-md-6 text-center text-md-end">
+                <nav class="footer-links" style=" padding-bottom: 5px;">
+                    <a class="text-decoration-none me-3" style="color: #2c3e50;">About Us</a>
+                    <a class="text-decoration-none me-3" style="color: #2c3e50;">Help</a>
+                    <a class="text-decoration-none" style="color: #2c3e50;">Contact Us</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Dynamically set the current year
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+</script>
+<style>
+    .footer {
+        background-color: #f8f9fa;
+        /* Light background */
+        color: #6c757d;
+        /* Subtle text color */
+        border-top: 1px solid #dee2e6;
+        /* Adds a clean separator */
+        font-size: 14px;
+        /* Smaller font size for a thinner look */
+    }
+
+    .footer .footer-links a {
+        color: #007bff;
+        /* Modern blue link color */
+        font-weight: 400;
+        /* Normal font weight for links */
+        transition: color 0.2s ease-in-out;
+    }
+
+    .footer .footer-links a:hover {
+        color: #0056b3;
+        /* Darker blue on hover */
+        text-decoration: underline;
+        /* Underline on hover */
+    }
+</style>

@@ -1,0 +1,329 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const notificationBadge = document.querySelector('.notification-badge');
+        const notificationDropdown = document.querySelector('#notification-dropdown');
+        const sound = new Audio('<%- process.env.BACKEND_URL %>assets/notification.mp3');
+        const popupContainer = document.createElement('div');
+        popupContainer.style.position = 'fixed';
+        popupContainer.style.bottom = '10px';
+        popupContainer.style.right = '10px';
+        popupContainer.style.zIndex = '1000';
+        popupContainer.style.display = 'flex';
+        popupContainer.style.flexDirection = 'column-reverse';
+        popupContainer.style.gap = '10px';
+        document.body.appendChild(popupContainer);
+
+        let displayedNotifications = new Set(
+            JSON.parse(localStorage.getItem('displayedNotifications')) || []
+        );
+
+        function createPopup(message) {
+            const popup = document.createElement('div');
+            popup.classList.add('popup');
+            popup.style.background = '#333';
+            popup.style.color = '#fff';
+            popup.style.padding = '10px';
+            popup.style.borderRadius = '5px';
+            popup.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.3)';
+            popup.style.transition = 'opacity 0.5s';
+            popup.innerHTML = `
+                <div class="popup-content">
+                    <p>${message}</p>
+                </div>
+            `;
+            popupContainer.appendChild(popup);
+            sound.play();
+
+            setTimeout(() => {
+                popup.style.opacity = '0';
+                setTimeout(() => popup.remove(), 500);
+            }, 5000);
+        }
+
+        async function getUnreadNotifications() {
+            try {
+                const response = await fetch('<%- process.env.BACKEND_URL %>api/v1/notifications');
+                const data = await response.json();
+
+                if (data.success && data.notifications.length > 0) {
+                    notificationBadge.textContent = data.notifications.length;
+                    notificationBadge.style.display = 'inline';
+
+                    notificationDropdown.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h6 class="dropdown-header text-white">Notifications</h6>
+                            <button id="clear-all-btn" class="btn btn-sm btn-danger">Clear All</button>
+                        </div>
+                        ${data.notifications.map(notification => `
+                            <div class="dropdown-item notify-item" data-id="${notification.id}" data-url="${notification.url}">
+                                <i class="fa fa-bell"></i>
+                                <span>${notification.message}</span>
+                                <button class="close-btn btn btn-sm btn-light" data-id="${notification.id}">
+                                    &times;
+                                </button>
+                            </div>
+                        `).join('')}`;
+
+                    data.notifications.forEach(notification => {
+                        if (!displayedNotifications.has(notification.id)) {
+                            createPopup(notification.message);
+                            displayedNotifications.add(notification.id);
+                        }
+                    });
+
+                    localStorage.setItem(
+                        'displayedNotifications',
+                        JSON.stringify(Array.from(displayedNotifications))
+                    );
+                } else {
+                    notificationBadge.style.display = 'none';
+                    notificationDropdown.innerHTML = `
+                        <h6 class="dropdown-header text-white">No New Notifications</h6>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            }
+        }
+
+        setInterval(getUnreadNotifications, 1000);
+        getUnreadNotifications();
+
+        notificationDropdown.addEventListener('click', async function (event) {
+            if (event.target.closest('.notify-item') && !event.target.classList.contains('close-btn')) {
+                const notificationItem = event.target.closest('.notify-item');
+                const notificationId = notificationItem.getAttribute('data-id');
+                const notificationUrl = notificationItem.getAttribute('<%- process.env.BACKEND_URL %>admin/users');
+
+                try {
+                    await fetch(
+                        `<%- process.env.BACKEND_URL %>api/v1/read-notification/${notificationId}/mark-read`,
+                        { method: 'PATCH', headers: { 'Content-Type': 'application/json' } }
+                    );
+                    window.location.href = '<%- process.env.BACKEND_URL %>admin/users';
+                } catch (error) {
+                    console.error('Error marking notification as read:', error);
+                }
+            }
+
+            if (event.target.closest('.close-btn')) {
+                const notificationId = event.target.closest('.close-btn').getAttribute('data-id');
+                try {
+                    await fetch(
+                        `<%- process.env.BACKEND_URL %>api/v1/read-notification/${notificationId}/mark-read`,
+                        { method: 'PATCH', headers: { 'Content-Type': 'application/json' } }
+                    );
+                    event.target.closest('.dropdown-item').remove();
+                } catch (error) {
+                    console.error('Error marking notification as read:', error);
+                }
+                event.stopPropagation(); // Prevent dropdown from closing
+            }
+
+            if (event.target.id === 'clear-all-btn') {
+                try {
+                    await fetch(
+                        `<%- process.env.BACKEND_URL %>api/v1/read-notifications/mark-all-read`,
+                        { method: 'POST', headers: { 'Content-Type': 'application/json' } }
+                    );
+                    displayedNotifications.clear();
+                    localStorage.setItem('displayedNotifications', JSON.stringify([]));
+                    notificationBadge.style.display = 'none';
+                    notificationDropdown.innerHTML = `
+                        <h6 class="dropdown-header text-white">No New Notifications</h6>
+                    `;
+                } catch (error) {
+                    console.error('Error clearing notifications:', error);
+                }
+            }
+        });
+    });
+</script>
+<style>
+    /* Popup notification styles */
+    .popup {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #333;
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        animation: slideIn 0.3s ease-in-out;
+    }
+
+    .popup-content {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* Animation for popup */
+    @keyframes slideIn {
+        0% {
+            right: -300px;
+        }
+
+        100% {
+            right: 20px;
+        }
+    }
+
+    /* Updated notification UI styles */
+    .navbar-custom {
+        background-color: #2c3e50;
+        border-bottom: 2px solid #34495e;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .topnav-menu {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    .notification-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .notification-icon {
+        font-size: 24px;
+        color: #ecf0f1;
+        cursor: pointer;
+    }
+
+    .notification-wrapper:hover .notification-icon {
+        color: #f39c12;
+    }
+
+    .notification-badge {
+        position: relative;
+        top: -5px;
+        right: -5px;
+        font-size: 12px;
+        color: white;
+        background-color: #dc3545;
+        border-radius: 50%;
+        padding: 3px 6px;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgb(191, 134, 134);
+    }
+
+    .notification-dropdown {
+        background-color: #34495e;
+        color: #ecf0f1;
+        min-width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(224, 182, 182, 0.1);
+    }
+
+    .dropdown-header {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        color: #ecf0f1;
+        transition: background-color 0.3s;
+        justify-content: space-between;
+    }
+
+    .dropdown-item:hover {
+        background-color: #16a085;
+        color: #fff;
+    }
+
+    .dropdown-item i {
+        margin-right: 10px;
+        font-size: 18px;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: #ecf0f1;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 10px;
+    }
+
+    .close-btn:hover {
+        color: #e74c3c;
+    }
+</style>
+
+<div class="navbar-custom">
+    <div class="">
+        <a href="<%- process.env.BACKEND_URL %>admin/dashboard" class="">
+            <span class="logo-sm" style="margin-left: 50px;">
+                <img src="<%- process.env.BACKEND_URL %>assets/images/logonew.png" alt="" height="100px">
+            </span>
+        </a>
+    </div>
+
+    <ul class="list-unstyled topnav-menu mb-0">
+        <!-- Notification icon -->
+        <li class="dropdown notification-list topbar-dropdown">
+            <a class="nav-link dropdown-toggle waves-effect waves-light notification-wrapper" data-bs-toggle="dropdown"
+                href="#" role="button" aria-haspopup="true" aria-expanded="false" id="notification-icon">
+                <i class="mdi mdi-bell-outline notification-icon"></i>
+                <span class="notification-badge" id="notification-badge">0</span>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-end notification-dropdown" id="notification-dropdown">
+                <h6 class="dropdown-header text-white" style="font-size: large;">Notifications</h6>
+                <div id="notification-list">
+                    <!-- Notifications will be dynamically inserted here -->
+                    <a href="#" class="dropdown-item notify-item">
+                        <i class="fe-info"></i>
+                        <span>Loading...</span>
+                        <button class="close-btn">
+                            <i class="mdi mdi-close"></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </li>
+
+
+        <!-- Admin dropdown -->
+        <li class="dropdown notification-list topbar-dropdown">
+            <a class="nav-link nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button"
+                aria-haspopup="false" aria-expanded="false">
+                <img src="<%- process.env.BACKEND_URL %>assets/images/users/user-1.jpg" alt="user-image"
+                    class="rounded-circle">
+                <span class="pro-user-name ms-1" style="color: #a29e07;">
+                    <b> Admin</b>
+                    <b><i class="mdi mdi-chevron-down" style="color: #a29e07;"></i></b>
+                </span>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-end profile-dropdown" style="background-color: #2c3e50;">
+                <div class="dropdown-header noti-title">
+                    <h6 class="text-overflow m-0" style="color: #a29e07; ">Welcome!</h6>
+                </div>
+                <a href="me" class="dropdown-item notify-item">
+                    <i class="fe-user"></i>
+                    <span>Change Password</span>
+                </a>
+                <a href="logout" class="dropdown-item notify-item">
+                    <i class="fe-log-out"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </li>
+    </ul>
+</div>

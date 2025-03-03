@@ -1,0 +1,19 @@
+# Global ignores
+node_modules/
+dist/
+build/
+.env*
+.DS_Store
+.vscode/
+.idea/
+
+# Frontend (React, Next.js, or Vite)
+frontend/node_modules/
+frontend/.next/
+frontend/build/
+frontend/dist/
+
+# Backend (Express, NestJS, etc.)
+backend/node_modules/
+backend/dist/
+backend/.env

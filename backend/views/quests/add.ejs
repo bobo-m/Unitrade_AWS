@@ -1,0 +1,250 @@
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", (e) => {
+            let hasError = false;
+
+            // Clear previous errors
+            document.querySelectorAll(".error-message").forEach((el) => el.remove());
+
+            // Required fields
+            const requiredFields = ["quest_name", "quest_type", "activity", "start_date", "end_date", "social_media", "quest_url", "coin_earn", "description"];
+
+            requiredFields.forEach((field) => {
+                const fieldElement = form.elements[field];
+                if (!fieldElement || !fieldElement.value.trim()) {
+                    hasError = true;
+                    const error = document.createElement("small");
+                    error.className = "text-danger error-message";
+                    error.textContent = "This field is required";
+                    fieldElement.parentElement.appendChild(error);
+                }
+            });
+
+            // Custom validation for Radio Buttons (social_media)
+            const socialMediaChecked = Array.from(form.elements["social_media"]).some((radio) => radio.checked);
+            if (!socialMediaChecked) {
+                hasError = true;
+                const socialMediaContainer = form.querySelector("div.mb-3");
+                const error = document.createElement("small");
+                error.className = "text-danger error-message";
+                error.textContent = "Please select a social media option";
+                socialMediaContainer.appendChild(error);
+            }
+
+            if (hasError) {
+                e.preventDefault(); // Stop form submission
+            }
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">
+                    <%= title %>
+                </h4>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form method="post" action="/admin/<%= module_slug %>/add"
+                            enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Quest</label>
+                                        <input type="text" id="simpleinput" name="quest_name" class="form-control"
+                                            value="">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="quest_type" class="form-label">Quest Type</label>
+                                        <select id="quest_type" name="quest_type" class="form-control">
+                                            <option value="">Select Quest Type</option>
+                                            <option value="banner">Banner</option>
+                                            <option value="non-banner">Non-Banner</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="activity" class="form-label">Activity</label>
+                                        <select id="activity" name="activity" class="form-control">
+                                            <option value="">Select Activity</option>
+                                            <option value="watch">Watch</option>
+                                            <option value="follow">Follow</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="start_date" class="form-label">Start Date</label>
+                                        <input type="datetime-local" id="start_date" name="start_date"
+                                            class="form-control">
+                                    </div>
+                                </div>
+<div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="duration" class="form-label">Duration (in minutes)</label>
+                                        <input type="number" id="duration" name="duration" class="form-control" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="end_date" class="form-label">End Date</label>
+                                        <input type="datetime-local" id="end_date" name="end_date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="social_media" class="form-label">Social Media</label>
+                                        <div>
+                                            <% const socialMedias=['Facebook', 'X' , 'Instagram' , 'LinkedIn'
+                                                , 'Snapchat' , 'YouTube' , 'Pinterest' , 'WhatsApp' ]; %>
+                                                <% socialMedias.forEach(media=> { %>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="social_media"
+                                                            id="social_media_<%= media %>" value="<%= media %>">
+                                                        <label class="form-check-label" for="social_media_<%= media %>">
+                                                            <%= media %>
+                                                        </label>
+                                                    </div>
+                                                    <% }) %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="screenshot_required" class="form-label">Screenshot Required</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="screenshot_required"
+                                            name="screenshot_required" value="1">
+                                        <label class="form-check-label" for="screenshot_required">Enable
+                                            Screenshot</label>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="quest_url" class="form-label">Quest URL</label>
+                                        <input type="text" id="quest_url" name="quest_url" class="form-control"
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="coin_earn" class="form-label">Coin Earn</label>
+                                        <input type="text" id="coin_earn" name="coin_earn" class="form-control"
+                                            value="">
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Image</label>
+                                        <input type="file" id="simpleinput" name="image" class="form-control">
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Desc</label>
+                                        <textarea class="form-control" id="editor" name="description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 float-left">
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-control" name="status">
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-4 float-left">
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div> <!-- end col -->
+                </div> <!-- end row-->
+            </div> <!-- end card-body -->
+        </div> <!-- end card -->
+    </div> <!-- end col -->
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const activityDropdown = document.getElementById("activity");
+        const durationInput = document.getElementById("duration");
+        const screenshotCheckbox = document.getElementById("screenshot_required");
+
+        // Initially disable the checkbox and duration input
+        screenshotCheckbox.disabled = true;
+        durationInput.disabled = true;
+        durationInput.removeAttribute("required");
+
+        activityDropdown.addEventListener("change", () => {
+            const selectedActivity = activityDropdown.value;
+
+            if (selectedActivity === "watch") {
+                // Enable the duration input and make it required
+                durationInput.disabled = false;
+                durationInput.setAttribute("required", true);
+
+                // Disable the checkbox for "watch" and uncheck it
+                screenshotCheckbox.checked = false;
+                screenshotCheckbox.disabled = true;
+            } else {
+                // Disable the duration input and remove its required attribute
+                durationInput.disabled = true;
+                durationInput.value = ""; // Clear the input value
+                durationInput.removeAttribute("required");
+
+                if (selectedActivity === "follow") {
+                    // Enable the checkbox for "follow"
+                    screenshotCheckbox.disabled = false;
+                } else {
+                    // Default case, disable the checkbox
+                    screenshotCheckbox.checked = false;
+                    screenshotCheckbox.disabled = true;
+                }
+            }
+        });
+
+        // Validate the duration input
+        durationInput.addEventListener("input", () => {
+            if (durationInput.value < 1) {
+                durationInput.setCustomValidity("Duration must be greater than 0");
+            } else {
+                durationInput.setCustomValidity("");
+            }
+        });
+    });
+</script>

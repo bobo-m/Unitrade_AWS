@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <link rel="stylesheet" href="/path/to/your/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h4 class="header-title">Company Coin Rate for <%= company.user_name %>
+        </h4>
+        <!-- Your form goes here -->
+        <form method="post" action="">
+            <div class="form-group">
+                <label for="coin_rate">Coin Rate:</label>
+                <input type="text" id="coin_rate" name="coin_rate" class="form-control" required
+                    value="<%= companyData.coin_rate || '' %>"> <!-- Pre-fill with existing data if available -->
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" class="form-control"
+                    required><%= companyData.description || '' %></textarea>
+                <!-- Pre-fill with existing data if available -->
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,272 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body table-responsive">
+                <div class="row page_top_bar">
+                    <div class="col-12">
+                        <div class="col-6 heading float-left">
+                            <h4 class="mt-0 header-title">Users</h4>
+                        </div>
+                        <div class="col-6 btns float-left text-right">
+                            <a class="btn btn-primary" href="/admin/<%= module_slug %>/add">Add New</a>
+                        </div>
+                    </div>
+                </div>
+
+                <table id="responsive-datatable" class="table table-bordered table-bordered dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Created</th>
+                            <!-- <th>User Type</th> -->
+                            <th>Referral Code</th>
+       <th>Parent Name (id)</th>
+                            <th>Pending Coins</th>
+
+                            <th>Total Coins</th>
+
+                            <th>Status</th>
+                            <th>Screenshot</th>
+                            <th>Actions</th>
+                            <th>View</th> <!-- New View Column -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% let serialNumber=1; %>
+                            <% users[0].forEach(user=> { %>
+                                <tr id="user-row-<%= user.id %>">
+                                    <td>
+                                        <%= serialNumber++ %>
+                                    </td>
+                                    <td>
+                                        <%= user.user_name %>
+                                    </td>
+                                    <td>
+                                        <%= user.mobile %>
+                                    </td>
+                                    <td>
+                                        <%= user.email %>
+                                    </td>
+                                    <td>
+                                        <%= user.date_created %>
+                                    </td>
+                                    <td>
+                                        <%= user.referral_code %>
+                                    </td>
+                           
+<td>
+  <%= user.parent_user_name 
+    ? `${user.parent_user_name} (${user.parent_id})` 
+    : `No Parent (${user.parent_id || "N/A"})` %>
+</td>
+                           
+                                    <td>
+                                        <i class="fas fa-coins" style="color: gold; margin-right: 5px;"></i>
+                                        <%= user.pending_coin || 0 %>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-coins" style="color: gold; margin-right: 5px;"></i>
+                                        <%= user.coins || 0 %>
+                                    </td>
+
+                                    <td>
+                                        <%= parseInt(user.status)===1 ? 'Active' : 'Inactive' %>
+                                    </td>
+
+                                    <td>
+                                        <% if (user.pay_image) { %>
+                                            <button class="btn btn-info view-image"
+                                                data-image="<%- process.env.BACKEND_URL %>uploads/<%= user.pay_image %>">
+                                                View Screenshot
+                                            </button>
+                                            <% } else { %>
+                                                No screenshot uploaded
+                                                <% } %>
+                                    </td>
+                                    <td>
+                                        <% if (parseInt(user.status)===1) { %>
+                                            <!-- User is active, actions button is disabled and hidden -->
+                                            <form action="/admin/users/deactivate-user" method="POST"
+                                                style="display:inline;" class="deactivate-form">
+                                                <input type="hidden" name="userId" value="<%= user.id %>">
+                                                <input type="hidden" name="status" value="0">
+                                                <button class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-toggle-off"></i> Deactivate
+                                                </button>
+                                            </form>
+                                            <% } else { %>
+                                                <!-- Activate Form - shown only when user is inactive -->
+                                                <form action="/admin/users/update-status" method="POST"
+                                                    style="display:inline;" class="activate-form">
+                                                    <input type="hidden" name="userId" value="<%= user.id %>">
+                                                    <input type="hidden" name="status" value="1">
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-success activate-button">
+                                                        <i class="fas fa-toggle-on"></i> Activate
+                                                    </button>
+                                                </form>
+                                                <% } %>
+                                    </td>
+
+
+                                    <td class="action_box">
+                                        <a href="/admin/<%= module_slug %>/<%= user.id %>" title="View Details">
+                                            <i class="fe-eye"></i>
+                                        </a>
+                                        <a href="/admin/user-tree-view/<%= user.id %>" title="User Tree">
+                                            <i class="fe-users"></i>
+                                        </a>
+                                        <a href="/admin/<%= module_slug %>/edit/<%= user.id %>" title="Edit User">
+                                            <i class="fe-edit"></i>
+                                        </a>
+                                        <a href="/admin/<%= module_slug %>/user-history/<%= user.id %>"
+                                            title="User History">
+                                            <i class="fe-clock"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for viewing images -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Image Screenshot</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Screenshot" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap JS (Ensure these are included) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.view-image').click(function () {
+            var imageUrl = $(this).data('image');
+            $('#modalImage').attr('src', imageUrl);
+            $('#imageModal').modal('show');
+        });
+    });
+$(document).on('click', '.close', function () {
+    $('#imageModal').modal('hide');
+});
+
+</script>
+<style>
+    /* Container styling */
+    .action_box a {
+        position: relative;
+        display: inline-block;
+        margin: 0 5px;
+        text-decoration: none;
+        color: #6c757d;
+        /* Default icon color */
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    /* Hover effect on links */
+    .action_box a:hover {
+        transform: scale(1.2);
+        /* Slight scaling effect */
+        color: #007bff;
+        /* Change to a modern blue shade */
+    }
+
+    /* Text styling above the icon */
+    .action_box a::after {
+        content: attr(data-title);
+        /* Use a custom attribute for hover text */
+        position: absolute;
+        top: -35px;
+        /* Adjusts the text just above the icon */
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        /* Center text horizontally and hide initially */
+        background: rgba(0, 0, 0, 0.75);
+        /* Semi-transparent background */
+        color: #fff;
+        /* Text color */
+        font-size: 12px;
+        padding: 5px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        /* Prevent text wrapping */
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+        /* Prevent interaction with the text */
+        z-index: 10;
+        /* Ensure text appears above other elements */
+    }
+
+    /* Show the text smoothly on hover */
+    .action_box a:hover::after {
+        transform: translateX(-50%) scale(1);
+        /* Fully visible and centered */
+        opacity: 1;
+    }
+</style>
+
+<!-- JavaScript to prevent default browser tooltip -->
+<script>
+    // Remove the browser's default tooltip
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.action_box a');
+        links.forEach(link => {
+            const title = link.getAttribute('title');
+            if (title) {
+                link.setAttribute('data-title', title); // Move the title to data-title
+                link.removeAttribute('title'); // Remove the default title attribute
+            }
+        });
+    });
+
+    $('.activate-button').click(function (e) {
+        e.preventDefault(); // Prevent default form submission
+        const form = $(this).closest('form');
+        const userId = form.find('input[name="userId"]').val();
+        const status = form.find('input[name="status"]').val();
+
+        if (confirm("Are you sure you want to activate this user?")) {
+            $.ajax({
+                url: form.attr('action'), // Use form action URL
+                method: 'POST',
+                data: {
+                    userId: userId,
+                    status: status
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Update UI dynamically
+                        const row = $(`#user-row-${userId}`);
+                        row.find('td:nth-child(9)').text('Active');
+                        form.closest('td').html('<button class="btn btn-sm btn-danger" disabled><i class="fas fa-toggle-off"></i> Deactivate</button>');
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error:', xhr);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+    });
+
+</script>

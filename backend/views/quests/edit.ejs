@@ -1,0 +1,183 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card" style="margin-top: 26px;">
+            <div class="card-body">
+                <h4 class="header-title">
+                    <%= title %>
+                </h4>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form method="post" action="/admin/<%= module_slug %>/update/<%= blog.id %>"
+                            enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Quest</label>
+                                        <input type="text" id="simpleinput" name="quest_name" class="form-control"
+                                            value="<%= blog.quest_name %>">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="quest_type" class="form-label">Quest Type</label>
+                                        <select id="quest_type" name="quest_type" class="form-control">
+                                            <option value="banner" <% if (blog.quest_type==='banner' ) { %> selected <%
+                                                    } %>>Banner</option>
+                                            <option value="non-banner" <% if (blog.quest_type==='non-banner' ) { %>
+                                                selected <% } %>>Non-Banner</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="activity" class="form-label">Activity</label>
+                                        <select id="activity" name="activity" class="form-control">
+                                            <option value="watch" <% if (blog.activity==='watch' ) { %> selected <% } %>
+                                                    >Watch</option>
+                                            <option value="follow" <% if (blog.activity==='follow' ) { %> selected <% }
+                                                    %>>Follow</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="start_date" class="form-label">Start Date</label>
+                                        <input type="datetime-local" id="start_date" name="start_date"
+                                            class="form-control" value="<%= blog.start_date ? blog.start_date : '' %>">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="end_date" class="form-label">End Date</label>
+                                        <input type="datetime-local" id="end_date" name="end_date" class="form-control"
+                                            value="<%= blog.end_date ? blog.end_date : '' %>">
+                                    </div>
+                                </div>
+                                  <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="duration" class="form-label">Duration (in minutes)</label>
+                                        <input type="number" id="duration" name="duration" class="form-control"
+                                            value="<%= blog.duration %>" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="social_media" class="form-label">Social Media</label>
+                                        <div>
+                                            <% const socialMedias=['Facebook', 'X' , 'Instagram' , 'LinkedIn'
+                                                , 'Snapchat' , 'YouTube' , 'Pinterest' , 'WhatsApp' ];
+                                                socialMedias.forEach(media=> {
+                                                %>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="social_media"
+                                                        id="social_media_<%= media %>" value="<%= media %>"
+                                                        <%=blog.social_media===media ? 'checked' : '' %>
+                                                    required>
+                                                    <label class="form-check-label" for="social_media_<%= media %>">
+                                                        <%= media %>
+                                                    </label>
+                                                </div>
+                                                <% }); %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Quest URL</label>
+                                        <input type="text" id="simpleinput" name="quest_url" class="form-control"
+                                            value="<%= blog.quest_url %>">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Coin Earn</label>
+                                        <input type="text" id="simpleinput" name="coin_earn" class="form-control"
+                                            value="<%= blog.coin_earn %>">
+                                    </div>
+                                </div>
+                            </div>
+
+                        
+                    </div>
+              
+                            <div class="row">
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3">
+                                        <label for="simpleinput" class="form-label">Image</label>
+                                        <input type="file" id="simpleinput" name="image" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <% if(blog.image){ %>
+                                <img src="<%- '/uploads/'+module_slug+'/'+blog.image%>" style="width:300px" /><br />
+                                <input type="hidden" name="old_image" value="<%- blog.image %>">
+                                <div class="delete_btn_box"><a
+                                        href="/admin/<%= module_slug %>/delete-image/<%= blog.id %>">Delete Image</a>
+                                </div>
+                                <% } %>
+
+                    <div class="row">
+                        <div class="col-lg-4 float-left"><button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </div>
+                    </form>
+                </div> <!-- end col -->
+
+
+            </div>
+            <!-- end row-->
+
+        </div> <!-- end card-body -->
+    </div> <!-- end card -->
+</div><!-- end col -->
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const activityDropdown = document.getElementById("activity");
+        const durationInput = document.getElementById("duration");
+
+        // Initialize the state based on the pre-selected value
+        const selectedActivity = activityDropdown.value;
+        if (selectedActivity === "watch") {
+            durationInput.disabled = false;
+            durationInput.setAttribute("required", true);
+        } else {
+            durationInput.disabled = true;
+            durationInput.removeAttribute("required");
+        }
+
+        // Listen for changes in the activity dropdown
+        activityDropdown.addEventListener("change", () => {
+            const selectedActivity = activityDropdown.value;
+
+            if (selectedActivity === "watch") {
+                // Enable duration input and make it required
+                durationInput.disabled = false;
+                durationInput.setAttribute("required", true);
+            } else {
+                // Disable duration input and clear its value
+                durationInput.disabled = true;
+                durationInput.value = "";
+                durationInput.removeAttribute("required");
+            }
+        });
+
+        // Validate the duration input
+        durationInput.addEventListener("input", () => {
+            if (durationInput.value < 1) {
+                durationInput.setCustomValidity("Duration must be greater than 0");
+            } else {
+                durationInput.setCustomValidity("");
+            }
+        });
+    });
+</script>
+
