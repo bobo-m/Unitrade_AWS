@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  input:focus, textarea:focus {
+    scroll-margin-top: 60px; /* Adjust this value as needed */
+  }
+}
+
+
+.loader {
+  border-top-color: #ddff00;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+/* toast */
+
+
+.Toastify__toast {
+  margin: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  text-transform: capitalize;
+}
+
+
+.Toastify__toast--success {
+  background-color: #28a745;
+  color: #fff;
+
+}
+
+
+.Toastify__toast--error {
+  background-color: #dc3545;
+
+  color: #fff;
+
+}
+
+
+.Toastify__toast-body svg {
+  fill: #fff;
+
+}
+
+
+.Toastify__toast-body svg {
+  fill: #fff;
+}
+
+
+.Toastify__close-button {
+  color: #fff;
+}
+  

@@ -1,0 +1,265 @@
+/* Custom class to hide scrollbar */
+.hide-scrollbar {
+  overflow: auto; /* Allow touch scrolling */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* For Chrome, Safari, and Opera */
+}
+
+
+
+
+html,
+body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;  
+}
+
+
+@font-face {
+  font-family: 'Roobert';
+  src: url('./assets/fonts/RoobertTRIALVF-BF67243fd545701.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GasoekOne';
+  src: url('./assets/fonts/GasoekOne-Regular.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* @font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: italic;
+  font-style: normal;
+} */
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  /* Removed unnecessary backslash */
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@media (min-width: 640px) {
+  table {
+    display: inline-table !important;
+  }
+
+  thead tr:not(:first-child) {
+    display: none;
+  }
+}
+
+td:not(:last-child) {
+  border-bottom: 0;
+}
+
+th:not(:last-child) {
+  border-bottom: 2px solid rgba(0, 0, 0, .1);
+}
+
+
+
+
+
+
+/* General background and layout */
+.bg-white {
+  background-color: #1a1a1a;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 400px;
+  background-color: #000;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 480px) {
+  .content-container {
+    max-width: 95%; /* Allow better fit on small screens */
+  }
+}
+/* User Info and Balance */
+.user-info,
+.balance {
+  text-align: center;
+}
+
+.text-gold {
+  color: #ffcc00;
+}
+
+/* Coin Button and Image */
+.coin-animation-container {
+  position: relative;
+  text-align: center;
+}
+
+.coin-btn {
+  display: inline-block;
+  transition: transform 0.3s ease-in-out;
+}
+
+.coin-btn:hover {
+  transform: scale(1.05);
+}
+
+.character-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 4px solid #eeece4;
+  object-fit: cover;
+}
+
+
+
+.coin {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: transform, opacity;
+}
+
+.coin-image {
+  width: 20px;
+  /* Adjust size to your coin image */
+  height: 20px;
+  /* Adjust size to your coin image */
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+}
+
+/* Pending Coin Section */
+.pending-coin {
+  border-color: #ffcc00;
+  background-color: #111;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.pending-coin:hover {
+  background-color: #333;
+}
+
+
+/* loader.css */
+
+/* Loader Overlay - Dark Theme Background */
+.loader-overlay-pre {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9); /* Slightly darker black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure loader is above other content */
+}
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  background-color: rgba(0, 0, 0, 0.9); /* Slightly darker black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure loader is above other content */
+}
+
+/* Circular Loader */
+.loader-circle {
+  border: 8px solid #333; /* Dark gray for the outer border */
+  border-top: 8px solid #fff; /* White for the spinning portion */
+  border-radius: 50%; /* Make it circular */
+  width: 60px; /* Adjust size as per your requirement */
+  height: 60px;
+  animation: spin 1.2s linear infinite; /* Rotation animation */
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+
+
+
+/* animation of profile page */
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+
+/* Add this to your global CSS or a CSS module */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-title {
+  width: 60%;
+  height: 20px;
+  margin-bottom: 8px;
+}
+
+.skeleton-text {
+  width: 80%;
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.skeleton-box {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 16px;
+}
+
+
+

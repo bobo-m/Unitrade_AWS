@@ -42,7 +42,6 @@
 //     confirmPassword: '',
 //   });
 
-
 //   useEffect(() => {
 //   // Fetch user and coin data on component mount
 //     const fetchData = async () => {
@@ -76,9 +75,9 @@
 //     if (["image/heif", "image/heic"].includes(file.type)) {
 //         try {
 //             const options = {
-//                 maxSizeMB: 1, 
-//                 maxWidthOrHeight: 1920, 
-//                 fileType: "image/jpeg", 
+//                 maxSizeMB: 1,
+//                 maxWidthOrHeight: 1920,
+//                 fileType: "image/jpeg",
 //             };
 //             const compressedFile = await imageCompression(file, options);
 //             console.log("Compressed HEIF/HEIC file:", compressedFile); // Debugging line
@@ -221,21 +220,19 @@
 //     }));
 //   };
 
-
-  
 //   const handlePasswordSubmit = async (e) => {
 //     e.preventDefault();
-  
+
 //     const { oldPassword, newPassword, confirmPassword } = formPassword;
-  
+
 //     if (newPassword !== confirmPassword) {
 //       toast.error('Passwords do not match!');
 //       return;
 //     }
-  
+
 //     if (hasSubmitted) return;
 //     setHasSubmitted(true);
-  
+
 //     try {
 //       await dispatch(updatePassword({ oldPassword, newPassword, confirmPassword }));
 //       toast.success('Password updated successfully!');
@@ -250,14 +247,14 @@
 //       setHasSubmitted(false); // Reset submission state
 //     }
 //   };
-  
+
 //   useEffect(() => {
 //     const tg = window.Telegram.WebApp;
 
 //     tg.disableClosingConfirmation();
-//     tg.disableVerticalSwipes(); 
+//     tg.disableVerticalSwipes();
 //   }, []);
-  
+
 //   return (
 //     <div className="relative min-h-screen flex justify-center items-center bg-black overflow-y-auto">
 //       {/* Back Button at the top */}
@@ -367,12 +364,7 @@
 //                 </div>
 //               </button>
 
-
-
-
 //             </div>
-
-
 
 //             {/* Change Password Modal */}
 //             {isModalOpen && (
@@ -494,8 +486,6 @@
 //       <Footer />
 //     </div>
 
-
-
 //   );
 // }
 
@@ -508,16 +498,18 @@ import { useDropzone } from "react-dropzone";
 import Footer from "./Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMeData } from "../../store/actions/homeActions";
-import { updatePassword } from '../../store/actions/authActions';
+import { updatePassword } from "../../store/actions/authActions";
 import { updateUserProfile } from "../../store/actions/userActions";
 import ToastNotification from "./Toast";
-import Loader from '../components/Loader';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Loader from "../components/Loader";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import imageCompression from "browser-image-compression";
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
-import EXIF from 'exif-js';
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
+import EXIF from "exif-js";
+import placeholderImg from "../Img/images.png";
+import heic2any from "heic2any";
 
 function Profile() {
   const navigate = useNavigate();
@@ -532,7 +524,7 @@ function Profile() {
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {  message, error } = useSelector((state) => state.auth);
+  const { message, error } = useSelector((state) => state.auth);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     user_name: "",
@@ -542,30 +534,30 @@ function Profile() {
   });
 
   const [formPassword, setFormPassword] = useState({
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
-const [cropData, setCropData] = useState('#');
-const [isCropping, setIsCropping] = useState(false);
-const handleCrop = () => {
-  if (image) {
-    setIsCropping(true);
-  }
-};
-const onCrop = () => {
-  const cropper = cropperRef.current;
-  setCropData(cropper.getCroppedCanvas().toDataURL());
-};
-const cropperRef = useRef(null);
+  const [cropData, setCropData] = useState("#");
+  const [isCropping, setIsCropping] = useState(false);
+  const handleCrop = () => {
+    if (image) {
+      setIsCropping(true);
+    }
+  };
+  const onCrop = () => {
+    const cropper = cropperRef.current;
+    setCropData(cropper.getCroppedCanvas().toDataURL());
+  };
+  const cropperRef = useRef(null);
   useEffect(() => {
-  // Fetch user and coin data on component mount
+    // Fetch user and coin data on component mount
     const fetchData = async () => {
       try {
         await dispatch(fetchMeData());
         setLoader(false); // Set loading to false after data is fetched
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setLoader(false); // Set loading to false if there's an error
       }
     };
@@ -582,99 +574,181 @@ const cropperRef = useRef(null);
     }
   }, [userData]);
 
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   accept:
+  //     "image/jpeg, image/png, image/gif, image/heif, image/heic, image/jpg, image/webp", // Accepting specific image formats
+  //   multiple: false, // Restrict to only one image
+  //   onDrop: async (acceptedFiles) => {
+  //     const file = acceptedFiles[0];
 
-const { getRootProps, getInputProps } = useDropzone({
-  accept: "image/jpeg, image/png, image/gif, image/heif, image/heic, image/jpg, image/webp", // Accepting specific image formats
-  multiple: false, // Restrict to only one image
-  onDrop: async (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    
-    if (file && ["image/jpeg", "image/png", "image/gif", "image/heif", "image/heic", "image/jpg"].includes(file.type)) {
-      try {
-        const orientation = await getOrientation(file); // Get EXIF orientation
-        const fixedFile = await fixImageOrientation(file, orientation); // Fix orientation if needed
-        
-        // Handle image compression for HEIF/HEIC
-        if (["image/heif", "image/heic"].includes(file.type)) {
-          const options = {
-            maxSizeMB: 1,
-            maxWidthOrHeight: 1920,
-            fileType: "image/jpeg",
-          };
-          const compressedFile = await imageCompression(fixedFile, options);
-          console.log("Compressed and fixed image:", compressedFile);
-          setImage(compressedFile);
-          setImagePreview(URL.createObjectURL(compressedFile));
-        } else {
-          // For other images, just set them directly
-          setImage(fixedFile);
-          setImagePreview(URL.createObjectURL(fixedFile));
-        }
-      } catch (error) {
-        console.error("Error processing the image:", error);
-      }
-    } else {
-      console.warn("No valid image file selected.");
-    }
-  },
-});
+  //     if (
+  //       file &&
+  //       [
+  //         "image/jpeg",
+  //         "image/png",
+  //         "image/gif",
+  //         "image/heif",
+  //         "image/heic",
+  //         "image/jpg",
+  //       ].includes(file.type)
+  //     ) {
+  //       try {
+  //         const orientation = await getOrientation(file); // Get EXIF orientation
+  //         const fixedFile = await fixImageOrientation(file, orientation); // Fix orientation if needed
 
+  //         // Handle image compression for HEIF/HEIC
+  //         if (["image/heif", "image/heic"].includes(file.type)) {
+  //           const options = {
+  //             maxSizeMB: 1,
+  //             maxWidthOrHeight: 1920,
+  //             fileType: "image/jpeg",
+  //           };
+  //           const compressedFile = await imageCompression(fixedFile, options);
+  //           console.log("Compressed and fixed image:", compressedFile);
+  //           setImage(compressedFile);
+  //           setImagePreview(URL.createObjectURL(compressedFile));
+  //         } else {
+  //           // For other images, just set them directly
+  //           setImage(fixedFile);
+  //           setImagePreview(URL.createObjectURL(fixedFile));
+  //         }
+  //       } catch (error) {
+  //         console.error("Error processing the image:", error);
+  //       }
+  //     } else {
+  //       console.warn("No valid image file selected.");
+  //     }
+  //   },
+  // });
 
-async function getOrientation(file) {
-  return new Promise((resolve, reject) => {
-    EXIF.getData(file, function() {
-      const orientation = EXIF.getTag(this, 'Orientation');
-      resolve(orientation);
-    });
-  });
-}
-async function fixImageOrientation(file, orientation) {
-  const image = await loadImage(file);
-  if (orientation && orientation !== 1) {
-    // Apply orientation fix based on EXIF orientation
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    // Handle rotation based on EXIF data (orientation)
-    if (orientation === 3) {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      ctx.rotate(Math.PI); // 180 degrees
-      ctx.drawImage(image, -image.width, -image.height);
-    } else if (orientation === 6) {
-      canvas.width = image.height;
-      canvas.height = image.width;
-      ctx.rotate(Math.PI / 2); // 90 degrees
-      ctx.drawImage(image, 0, -image.height);
-    } else if (orientation === 8) {
-      canvas.width = image.height;
-      canvas.height = image.width;
-      ctx.rotate(-Math.PI / 2); // -90 degrees
-      ctx.drawImage(image, -image.width, 0);
-    } else {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      ctx.drawImage(image, 0, 0);
-    }
-
-function loadImage(file) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      img.onload = () => resolve(img);
-      img.src = e.target.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => resolve(blob), file.type);
+  async function getOrientation(file) {
+    return new Promise((resolve, reject) => {
+      EXIF.getData(file, function () {
+        const orientation = EXIF.getTag(this, "Orientation");
+        resolve(orientation);
+      });
     });
   }
-  return file;
-}
+
+  function loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        img.onload = () => resolve(img);
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function fixImageOrientation(file, orientation) {
+    const image = await loadImage(file);
+    if (orientation && orientation !== 1) {
+      // Apply orientation fix based on EXIF orientation
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      // Handle rotation based on EXIF data (orientation)
+      if (orientation === 3) {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.rotate(Math.PI); // 180 degrees
+        ctx.drawImage(image, -image.width, -image.height);
+      } else if (orientation === 6) {
+        canvas.width = image.height;
+        canvas.height = image.width;
+        ctx.rotate(Math.PI / 2); // 90 degrees
+        ctx.drawImage(image, 0, -image.height);
+      } else if (orientation === 8) {
+        canvas.width = image.height;
+        canvas.height = image.width;
+        ctx.rotate(-Math.PI / 2); // -90 degrees
+        ctx.drawImage(image, -image.width, 0);
+      } else {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0);
+      }
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => resolve(blob), file.type);
+      });
+    }
+    return file;
+  }
+
+  const compressImage = async (file, options) => {
+    const convertedBlob = await heic2any({
+      blob: file,
+      toType: "image/jpeg",
+      quality: 0.8,
+    });
+    const compressedBlob = await imageCompression(convertedBlob, options);
+    const compressedFile = new File(
+      [compressedBlob],
+      file.name.replace(/\.(heic|heif)/, ".jpeg"),
+      {
+        type: "image/jpeg",
+      }
+    );
+
+    return compressedFile;
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/png": [],
+      "image/jpg": [],
+      "image/jpeg": [],
+      "image/gif": [],
+      "image/heif": [],
+      "image/heic": [],
+    }, // Accepting specific image formats
+    multiple: false, // Restrict to only one image
+    onDrop: async (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      if (
+        file &&
+        [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/heif",
+          "image/heic",
+          "image/jpg",
+        ].includes(file.type)
+      ) {
+        try {
+          //const orientation = await getOrientation(file); // Get EXIF orientation
+          //const fixedFile = await fixImageOrientation(file, orientation); // Fix orientation if needed
+          const fixedFile = file;
+          // Handle image compression for HEIF/HEIC
+          if (["image/heif", "image/heic"].includes(file.type)) {
+            const options = {
+              maxSizeMB: 1,
+              maxWidthOrHeight: 1920,
+              fileType: "image/jpeg",
+            };
+            //const compressedFile = await imageCompression(fixedFile, options)
+            const compressedFile = await compressImage(fixedFile, options);
+            console.log("Compressed and fixed image:", compressedFile);
+            setImage(compressedFile);
+            setImagePreview(URL.createObjectURL(compressedFile));
+          } else {
+            // For other images, just set them directly
+            setImage(fixedFile);
+            setImagePreview(URL.createObjectURL(fixedFile));
+          }
+        } catch (error) {
+          console.error("Error processing the image:", error);
+        }
+      } else {
+        console.warn("No valid image file selected.");
+      }
+    },
+  });
 
   const handleUpdateProfile = async () => {
     setLoading(true);
@@ -688,25 +762,26 @@ function loadImage(file) {
     if (image && image instanceof File) {
       updatedFormData.append("user_photo", image);
     }
+
+    console.log(image);
     // Check the contents of FormData before dispatching
     console.log("Final FormData to be sent:");
     for (let [key, value] of updatedFormData.entries()) {
       console.log(key, value);
     }
-  try {
-    await dispatch(updateUserProfile(updatedFormData));
-    dispatch(fetchMeData());
-    setToastMessage("Profile updated successfully!");
-    setShowToast(true);
-  } catch (error) {
-    setToastMessage("There was an error updating your profile.");
-    setShowToast(true);
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      await dispatch(updateUserProfile(updatedFormData));
+      dispatch(fetchMeData());
+      setToastMessage("Profile updated successfully!");
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage("There was an error updating your profile.");
+      setShowToast(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
- 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -782,8 +857,8 @@ function loadImage(file) {
   }, []);
 
   const handleCopyReferralCode = () => {
-    navigator.clipboard.writeText(userData?.referral_code || '');
-    setToastMessage('Referral code copied to clipboard!');
+    navigator.clipboard.writeText(userData?.referral_code || "");
+    setToastMessage("Referral code copied to clipboard!");
     setShowToast(true);
   };
 
@@ -795,55 +870,71 @@ function loadImage(file) {
     }));
   };
 
-
-  
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-  
+
     const { oldPassword, newPassword, confirmPassword } = formPassword;
-  
+
     if (newPassword !== confirmPassword) {
-      toast.error('Passwords do not match!');
+      toast.error("Passwords do not match!");
       return;
     }
-  
+
     if (hasSubmitted) return;
     setHasSubmitted(true);
-  
+
     try {
-      await dispatch(updatePassword({ oldPassword, newPassword, confirmPassword }));
-      toast.success('Password updated successfully!');
-        // Clear the input fields by resetting the state
-    setFormPassword({ oldPassword: '', newPassword: '', confirmPassword: '' });
-    setIsModalOpen(false); // Close modal only on success
+      await dispatch(
+        updatePassword({ oldPassword, newPassword, confirmPassword })
+      );
+      toast.success("Password updated successfully!");
+      // Clear the input fields by resetting the state
+      setFormPassword({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      setIsModalOpen(false); // Close modal only on success
     } catch (error) {
-      console.error('Error updating password:', error);
-      const errorMessage = error.message || 'Failed to update password.';
+      console.error("Error updating password:", error);
+      const errorMessage = error.message || "Failed to update password.";
       toast.error(errorMessage); // Show error toast for failure
     } finally {
       setHasSubmitted(false); // Reset submission state
     }
   };
-  
+
   useEffect(() => {
     const tg = window.Telegram.WebApp;
 
     tg.disableClosingConfirmation();
-    tg.disableVerticalSwipes(); 
+    tg.disableVerticalSwipes();
   }, []);
-  
+
   return (
     <div className="relative min-h-screen flex justify-center items-center bg-black overflow-y-auto">
       {/* Back Button at the top */}
       <div className="absolute top-4 left-4 z-10">
-        <button onClick={() => navigate(-1)} className="text-2xl text-white cursor-pointer">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-2xl text-white cursor-pointer"
+        >
           <FaChevronLeft />
         </button>
       </div>
-      <ToastContainer position="top-right" autoClose={1000} hideProgressBar theme="dark" />
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar
+        theme="dark"
+      />
 
       {/* Toast Notification */}
-      <ToastNotification message={toastMessage} show={showToast} setShow={setShowToast} />
+      <ToastNotification
+        message={toastMessage}
+        show={showToast}
+        setShow={setShowToast}
+      />
 
       {/* Canvas background */}
       <canvas ref={canvasRef} className="absolute inset-0 z-0" />
@@ -853,14 +944,13 @@ function loadImage(file) {
         <Loader />
       ) : (
         <section className="relative z-10 w-full max-w-md bg-black text-white shadow-lg rounded-lg px-4 py-6 overflow-y-auto">
-
           <div className="flex flex-col items-center space-y-4">
             {/* Profile Picture */}
             <div className="relative">
               <div {...getRootProps()} className="cursor-pointer">
                 <input {...getInputProps()} />
                 <img
-                  src={imagePreview || formData.user_photo || "/src/Img/images.png"}
+                  src={imagePreview || formData.user_photo || placeholderImg}
                   alt="Profile"
                   className="w-24 h-24 object-cover rounded-full border-4 border-gray-600"
                 />
@@ -869,31 +959,36 @@ function loadImage(file) {
                 </div>
               </div>
 
-    {isCropping && (
-      <div className="modal">
-        <Cropper
-          ref={cropperRef}
-          src={imagePreview}
-          style={{ height: 400, width: '100%' }}
-          aspectRatio={1}
-          guides={false}
-          crop={onCrop}
-        />
-        <div className="modal-footer">
-          <button onClick={() => setIsCropping(false)}>Cancel</button>
-          <button onClick={() => { setImage(cropData); setIsCropping(false); }}>Save</button>
-        </div>
-      </div>
-    )}
-  </div>
+              {isCropping && (
+                <div className="modal">
+                  <Cropper
+                    ref={cropperRef}
+                    src={imagePreview}
+                    style={{ height: 400, width: "100%" }}
+                    aspectRatio={1}
+                    guides={false}
+                    crop={onCrop}
+                  />
+                  <div className="modal-footer">
+                    <button onClick={() => setIsCropping(false)}>Cancel</button>
+                    <button
+                      onClick={() => {
+                        setImage(cropData);
+                        setIsCropping(false);
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
-{/*               {image && (
+            {/*               {image && (
                 <div className="absolute bottom-1 left-1 bg-gray-800 rounded-full p-2">
                   <BsFillSaveFill className="text-white text-xs" />
                 </div>
               )} */}
-
-
 
             <div className="text-center mt-4">
               {/* User Name */}
@@ -903,7 +998,9 @@ function loadImage(file) {
 
               {/* Referral Code */}
               <div className="flex items-center justify-center space-x-2 mt-2">
-                <p className="text-sm font-semibold text-gray-300">Referral Code:</p>
+                <p className="text-sm font-semibold text-gray-300">
+                  Referral Code:
+                </p>
                 <div className="px-2 py-1 bg-gray-800 text-gray-100 rounded-lg shadow-md">
                   <span className="font-mono">{userData?.referral_code}</span>
                 </div>
@@ -948,19 +1045,15 @@ function loadImage(file) {
                   Change Password
                 </div>
               </button>
-
-
-
-
             </div>
-
-
 
             {/* Change Password Modal */}
             {isModalOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center">
                 <div className="bg-black p-8 rounded-lg w-11/12 max-w-md shadow-lg">
-                  <h2 className="text-2xl font-semibold text-white text-center mb-4">Change Password</h2>
+                  <h2 className="text-2xl font-semibold text-white text-center mb-4">
+                    Change Password
+                  </h2>
 
                   <div className="space-y-4">
                     <input
@@ -973,15 +1066,16 @@ function loadImage(file) {
                     />
                     <input
                       type="password"
-                          name="newPassword"
-                          value={formPassword.newPassword}
+                      name="newPassword"
+                      value={formPassword.newPassword}
                       onChange={handleInputChangePassword}
                       className="w-full bg-transparent border border-white text-white rounded p-2 focus:outline-none"
                       placeholder="New Password"
                     />
                     <input
                       type="password"
-                      name="confirmPassword"        value={formPassword.confirmPassword}
+                      name="confirmPassword"
+                      value={formPassword.confirmPassword}
                       onChange={handleInputChangePassword}
                       className="w-full bg-transparent border border-white text-white rounded p-2 focus:outline-none"
                       placeholder="Confirm New Password"
@@ -1065,7 +1159,7 @@ function loadImage(file) {
                   />
                 </svg>
               ) : (
-                'Update'
+                "Update"
               )}
             </button>
           </div>
@@ -1075,12 +1169,7 @@ function loadImage(file) {
       {/* Footer */}
       <Footer />
     </div>
-
-
-
   );
 }
 
 export default Profile;
-
-

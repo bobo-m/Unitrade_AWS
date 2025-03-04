@@ -28,6 +28,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "framer-motion": "^11.11.9",
+    "heic2any": "^0.0.4",
     "js-cookie": "^3.0.5",
     "process": "^0.11.10",
     "qrcode": "^1.5.4",

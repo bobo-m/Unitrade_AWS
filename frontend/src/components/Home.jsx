@@ -289,7 +289,7 @@ function Home() {
   }, [statsData]);
 
   return (
-    <div className="bg-black flex justify-center items-center font-Inter min-h-screen w-full overflow-hidden relative">
+    <div className="bg-black flex justify-center items-center font-Inter h-screen w-full overflow-hidden relative">
       <ToastContainer
         position="top-right"
         autoClose={500}
@@ -302,7 +302,7 @@ function Home() {
       {loading ? (
         <Loader />
       ) : (
-        <div className="w-full bg-black text-white min-h-screen  flex flex-col max-w-lg relative">
+        <div className="w-full bg-black text-white h-full  flex flex-col justify-between pb-[54px] max-w-lg relative">
           {/* Header Section */}
           <Header />
           <div
@@ -323,16 +323,16 @@ function Home() {
             />
           </div>
           {/* User Info Section */}
-          <div className="flex flex-col items-center  space-y-2">
+          <div className="flex flex-col items-center space-y-2">
             <div
               // onClick={handleNavigate}
-              className="bg-blue-600 text-white h-28 w-28 flex justify-center items-center rounded-full"
+              className="bg-blue-600 text-white h-28 w-28 md:h-28 md:w-28 lg:w-20 lg:h-20 flex justify-center items-center rounded-full"
             >
               {userData?.user_photo ? (
                 <img
                   src={userData.user_photo}
                   alt="Profile"
-                  className="w-28 h-28 object-cover rounded-full border-4 border-gray-600"
+                  className="w-full h-full object-cover rounded-full border-4 border-gray-600"
                 />
               ) : (
                 <span className="text-4xl ">
@@ -397,20 +397,9 @@ function Home() {
           )}
 
           {/* Wallet Section */}
-          <div className="mt-auto px-3 py-4 mb-12">
+          <div className="mt-2 px-3 max-md:py-4 mb-12">
             <div>
-              <div className="flex ">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/2550/2550403.png"
-                  alt=""
-                  className="w-4 h-4 mt-1"
-                />
-                <p className="ml-0.5 text-sm font-medium ">
-                  <span>{userData ? userData.pending_coin : "0"}</span>/
-                  <span>{userData ? userData.coins : "0"}</span>
-                </p>
-              </div>
-              <div className="flex justify-center items-center bottom-[25px] my-2 relative cursor-pointer">
+              <div className="flex justify-center items-center my-2 relative cursor-pointer">
                 {/* GIF Container */}
                 {/* <img
                   className={`w-72 h-72  object-cover absolute z-10 ${
@@ -430,9 +419,9 @@ function Home() {
                   src="src/assets/gif/coin.png"
                   alt="Static Image"
                 /> */}
-                <div className="px-4 mt-4 flex justify-center">
+                <div className="px-4 max-md:mt-4 flex justify-center">
                   <div
-                    className="w-80 h-80 p-4 rounded-full circle-outer"
+                    className="max-h-60 max-w-60 p-4 rounded-full circle-outer"
                     onClick={handleCardClick}
                   >
                     <div className="w-full h-full rounded-full circle-inner">
@@ -444,6 +433,17 @@ function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="flex mb-2">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/2550/2550403.png"
+                  alt=""
+                  className="w-4 h-4 mt-1"
+                />
+                <p className="ml-0.5 text-sm font-medium">
+                  <span>{userData ? userData.pending_coin : "0"}</span>/
+                  <span>{userData ? userData.coins : "0"}</span>
+                </p>
               </div>
             </div>
             {/* <div

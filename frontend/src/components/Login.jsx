@@ -6,7 +6,7 @@ import { login } from "../../store/actions/authActions";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icons for the eye button
 import ToastNotification from "./Toast";
 import { logo } from "../images/index";
-import Loader from '../components/Loader';
+import Loader from "../components/Loader";
 import Swal from "sweetalert2"; // Import SweetAlert2
 function Login() {
   const dispatch = useDispatch();
@@ -18,20 +18,21 @@ function Login() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
+
   const extractErrorMessage = (errorResponse) => {
     try {
       // Log the received error response to see its structure
-      console.log('Received Error Response:', errorResponse);
-  
+      console.log("Received Error Response:", errorResponse);
+
       // Check if the message field exists and parse it
       if (errorResponse?.message) {
         const parsedMessage = JSON.parse(errorResponse.message);
-        console.log('Parsed Message:', parsedMessage);
-        
+        console.log("Parsed Message:", parsedMessage);
+
         // Extract the error message from the parsed message
         return parsedMessage?.error || "An unknown error occurred.";
       }
-  
+
       // If no message, return the default error
       return "An unknown error occurred.";
     } catch (error) {
@@ -39,33 +40,44 @@ function Login() {
       return "An unknown error occurred.";
     }
   };
-  
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrors(""); // Clear previous error message
     setLoading(true); // Set loading state to true
-  
+
     try {
       // Dispatch the login action and capture the response
       const response = await dispatch(login({ mobile, password }));
-  
+
       console.log("API Response: ", response); // Log the API response for debugging
-  
+
       // Check if the login is successful
       if (response?.success && response?.token) {
         setToastMessage("Login successful!");
         setShowToast(true);
         navigate("/home"); // Navigate to home on success
-      } else if (response?.status === 0 && response?.message === "Your account is not active yet. Please wait for activation.") {
+      } else if (
+        response?.status === 0 &&
+        response?.message ===
+          "Your account is not active yet. Please wait for activation."
+      ) {
         // Handle account not active yet condition
-        setToastMessage("Your account is not active yet. Please wait for activation.");
+        setToastMessage(
+          "Your account is not active yet. Please wait for activation."
+        );
         setShowToast(true); // Show the toast message
-      } else if (response?.status === "payment_required" && response?.message === "Your account is not yet confirmed or active. Please complete the necessary steps.") {
+      } else if (
+        response?.status === "payment_required" &&
+        response?.message ===
+          "Your account is not yet confirmed or active. Please complete the necessary steps."
+      ) {
         // Handle payment required condition
-        setToastMessage("Your account is not yet confirmed or active. Please complete the necessary steps.");
+        setToastMessage(
+          "Your account is not yet confirmed or active. Please complete the necessary steps."
+        );
         setShowToast(true); // Show the toast message
-  
+
         // Optionally, show a SweetAlert for payment instructions
         const userId = response?.user?.id;
         Swal.fire({
@@ -92,16 +104,10 @@ function Login() {
       setErrors(errorMessage); // Update the error state for UI display
       setToastMessage(errorMessage); // Show the error message in toast
       setShowToast(true);
-
     } finally {
       setLoading(false); // Reset loading state after success or failure
     }
   };
-  
-  
-  
-  
-  
 
   const [firstName, setFirstName] = useState("");
 
@@ -118,7 +124,11 @@ function Login() {
 
   return (
     <div className="bg-black flex justify-center items-center min-h-screen">
-      <ToastNotification message={toastMessage} show={showToast} setShow={setShowToast} />
+      <ToastNotification
+        message={toastMessage}
+        show={showToast}
+        setShow={setShowToast}
+      />
       <div className="w-full max-w-lg bg-black text-white shadow-2xl rounded-2xl overflow-hidden font-Inter">
         {/* Header Section */}
         <div className="p-6 sm:p-10 shadow-lg">
@@ -131,11 +141,16 @@ function Login() {
             Log in to your account
           </h2>
 
-          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6 px-2 sm:px-4">
+          <form
+            onSubmit={handleLogin}
+            className="space-y-4 sm:space-y-6 px-2 sm:px-4"
+          >
             <div className="relative">
-              <label className="absolute -top-2 left-3 text-xs text-gray-400 bg-black px-1">Mobile No</label>
+              <label className="absolute -top-2 left-3 text-xs text-gray-400 bg-black px-1">
+                Mobile No
+              </label>
               <input
-                type="number"
+                type="text"
                 name="mobile"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
@@ -147,7 +162,9 @@ function Login() {
             </div>
 
             <div className="relative">
-              <label className="absolute -top-2 left-3 text-xs text-gray-400 bg-black px-1">Password</label>
+              <label className="absolute -top-2 left-3 text-xs text-gray-400 bg-black px-1">
+                Password
+              </label>
               <input
                 type={showPassword ? "text" : "password"} // Toggle input type
                 name="password"
@@ -173,7 +190,9 @@ function Login() {
               <button
                 type="submit"
                 className={`w-full py-3 bg-[#6339F9] text-white font-bold rounded-full hover:bg-blue-700 transition ${
-                  loading ? "cursor-not-allowed opacity-70" : "hover:scale-105 hover:bg-blue-600 hover:shadow-lg"
+                  loading
+                    ? "cursor-not-allowed opacity-70"
+                    : "hover:scale-105 hover:bg-blue-600 hover:shadow-lg"
                 }`}
                 disabled={loading}
               >
@@ -221,9 +240,12 @@ function Login() {
 
         {/* Footer Section */}
         <div className="bg-[#111113] py-4 sm:py-6 text-center rounded-b-2xl">
-          <p    className="text-xs sm:text-sm text-[#909090]">
+          <p className="text-xs sm:text-sm text-[#909090]">
             New to Unitrade?
-            <Link to="/" className="text-white font-semibold hover:underline ml-1">
+            <Link
+              to="/"
+              className="text-white font-semibold hover:underline ml-1"
+            >
               Sign Up
             </Link>
           </p>
@@ -234,5 +256,3 @@ function Login() {
 }
 
 export default Login;
-
-

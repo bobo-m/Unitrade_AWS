@@ -339,6 +339,7 @@ function Withdrawal() {
                   backgroundRepeat: "no-repeat", // Prevents the GIF from repeating
                 }}
               >
+                <h2 className="text-center text-2xl mb-2 font-Inter">Wallet</h2>
                 <div className="flex items-center justify-center font-Inter leading-3 text-[34px] font-extrabold mb-4">
                   <img src={logo} alt="Logo" className="w-8 h-8" />
                   <p>{userData ? userData.coins : "0"}</p>
