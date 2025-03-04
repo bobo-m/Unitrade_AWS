@@ -74,25 +74,25 @@ const testimonials = require("./routes/testimonialRoute");
 const transactions = require("./routes/transactionRoute");
 const companytransactions = require("./routes/companytransactionRoute");
 
-// app.use("/", user);
-// app.use("/", blogs);
-// app.use("/", companies);
-// app.use("/", quests);
-// app.use("/", settings);
-// app.use("/", faqs);
-// app.use("/", testimonials);
-// app.use("/", transactions);
-// app.use("/", companytransactions);
+app.use("/", user);
+app.use("/", blogs);
+app.use("/", companies);
+app.use("/", quests);
+app.use("/", settings);
+app.use("/", faqs);
+app.use("/", testimonials);
+app.use("/", transactions);
+app.use("/", companytransactions);
 
-app.use("/admin", user);
-app.use("/admin", blogs);
-app.use("/admin", companies);
-app.use("/admin", quests);
-app.use("/admin", settings);
-app.use("/admin", faqs);
-app.use("/admin", testimonials);
-app.use("/admin", transactions);
-app.use("/admin", companytransactions);
+// app.use("/admin", user);
+// app.use("/admin", blogs);
+// app.use("/admin", companies);
+// app.use("/admin", quests);
+// app.use("/admin", settings);
+// app.use("/admin", faqs);
+// app.use("/admin", testimonials);
+// app.use("/admin", transactions);
+// app.use("/admin", companytransactions);
 
 // app.use("/admin", withdrwals);
 

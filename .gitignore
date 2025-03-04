@@ -6,6 +6,7 @@ build/
 .DS_Store
 .vscode/
 .idea/
+*.env
 
 # Frontend (React, Next.js, or Vite)
 frontend/node_modules/
@@ -17,3 +18,4 @@ frontend/dist/
 backend/node_modules/
 backend/dist/
 backend/.env
+
