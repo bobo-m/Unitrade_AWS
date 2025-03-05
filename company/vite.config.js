@@ -28,7 +28,7 @@ export default defineConfig({
     port: 5000, // Custom port set karein
     proxy: {
       '/api': { // Ensure the proxy path starts with '/'
-        target: "https://theunitradehub.com/api/v1", // Backend API ka target URL
+        target: "https://theunitradehub.com/admin/api/v1", // Backend API ka target URL
         changeOrigin: true, // CORS issues handle karne ke liye
         rewrite: (path) => path.replace(/^\/api/, ''), // '/api' prefix hatane ke liye
       },
