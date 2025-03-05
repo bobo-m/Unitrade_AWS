@@ -147,7 +147,7 @@ function Footer() {
               activePage === "withdrawal" ? "font-bold" : "opacity-50"
             }`}
           >
-            Transactions
+            Wallet
           </span>
         </Link>
       </div>
