@@ -18,25 +18,24 @@
 
 
 
-
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  base: "/company/", // Base URL set karein agar app `/company` path par hosted hai
   server: {
-    host: true, // Set to true to listen on all IPs
-    port: 5000, // Specify a custom port, e.g., 3000
+    host: true, // Sabhi IPs par listen karne ke liye
+    port: 5000, // Custom port set karein
     proxy: {
-      '/api': { // Ensure the proxy path starts with '/' 
-        target: "https://theunitradehub.com/api/v1", // Target backend API
-      changeOrigin: true, // Enable to handle CORS issues
-        rewrite: (path) => path.replace(/^\/api/, ''), // Remove '/api' prefix when proxying
+      '/api': { // Ensure the proxy path starts with '/'
+        target: "https://theunitradehub.com/api/v1", // Backend API ka target URL
+        changeOrigin: true, // CORS issues handle karne ke liye
+        rewrite: (path) => path.replace(/^\/api/, ''), // '/api' prefix hatane ke liye
       },
     },
   },
   plugins: [react()],
   build: {
-    chunkSizeWarningLimit: 1000, // Increase warning limit to 1000 kB
+    chunkSizeWarningLimit: 1000, // Bundle size warning limit set karein
   },
 });
