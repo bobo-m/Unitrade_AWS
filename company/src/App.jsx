@@ -26,14 +26,14 @@ function App({ Component, pageProps }) {
 
   useEffect(() => {
     // Initialize Telegram WebApp
-    // if (window.Telegram && window.Telegram.WebApp) {
-    //   const tg = window.Telegram.WebApp;
-    //   tg.ready();
-    //   tg.expand();
-    //   tg.disableVerticalSwipes(); // Disable vertical swipes on mobile
-    //   tg.disableClosingConfirmation();
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+      tg.expand();
+      tg.disableVerticalSwipes(); // Disable vertical swipes on mobile
+      tg.disableClosingConfirmation();
 
-    // }
+    }
  
 
 
