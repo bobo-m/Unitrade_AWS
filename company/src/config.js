@@ -1,5 +1,5 @@
 
-export const BACKEND_URL = "https://admin.theunitradehub.com";
+export const BACKEND_URL = "https://theunitradehub.com/admin";
   //export const BACKEND_URL = "http://localhost:4000";
 //   export const FRONTEND_URL =
 //    "https://telegram-bot-git-frontuni-arjuns-projects-e072bddd.vercel.app";
