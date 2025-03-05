@@ -29,7 +29,7 @@ export default defineConfig({
     port: 5000, // Specify a custom port, e.g., 3000
     proxy: {
       '/api': { // Ensure the proxy path starts with '/' 
-        target: "https://admin.theunitradehub.com/api/v1", // Target backend API
+        target: "https://theunitradehub.com/api/v1", // Target backend API
       changeOrigin: true, // Enable to handle CORS issues
         rewrite: (path) => path.replace(/^\/api/, ''), // Remove '/api' prefix when proxying
       },
