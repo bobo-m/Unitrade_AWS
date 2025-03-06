@@ -302,7 +302,7 @@ function Home() {
       {loading ? (
         <Loader />
       ) : (
-        <div className="w-full bg-black text-white h-full  flex flex-col justify-between pb-[54px] max-w-lg relative">
+        <div className="w-full bg-black text-white h-full  flex flex-col justify-between pb-[60px] max-w-full relative">
           {/* Header Section */}
           <Header />
           <div
@@ -323,10 +323,10 @@ function Home() {
             />
           </div>
           {/* User Info Section */}
-          <div className="flex flex-col items-center space-y-2">
+          <div className="flex flex-col items-center space-y-2 flex-grow">
             <div
               // onClick={handleNavigate}
-              className="bg-blue-600 text-white h-28 w-28 md:h-28 md:w-28 lg:w-20 lg:h-20 flex justify-center items-center rounded-full"
+              className="bg-blue-600 flex-grow text-white aspect-square min-h-min min-w-min max-h-28 max-w-28 md:h-28 md:w-28 lg:w-20 lg:h-20 flex justify-center items-center p-3 rounded-full"
             >
               {userData?.user_photo ? (
                 <img
@@ -335,7 +335,7 @@ function Home() {
                   className="w-full h-full object-cover rounded-full border-4 border-gray-600"
                 />
               ) : (
-                <span className="text-4xl ">
+                <span className="text-3xl ">
                   {userData?.user_name
                     ? userData.user_name
                         .split(" ")
@@ -347,7 +347,7 @@ function Home() {
               )}
             </div>
 
-            <p className="text-xl  uppercase font-Inter">
+            <p className="text-2xl  uppercase font-Inter">
               {userData ? userData.user_name : "User Name"}
             </p>
 
@@ -397,9 +397,9 @@ function Home() {
           )}
 
           {/* Wallet Section */}
-          <div className="mt-2 px-3 max-md:py-4 mb-12">
-            <div>
-              <div className="flex justify-center items-center my-2 relative cursor-pointer">
+          <div className="flex flex-col mt-2 px-3 max-md:py-4 flex-grow">
+            <div className="mt-auto flex items-center justify-center flex-col flex-shrink">
+              <div className="flex justify-center items-center my-2 relative cursor-pointer flex-shrink">
                 {/* GIF Container */}
                 {/* <img
                   className={`w-72 h-72  object-cover absolute z-10 ${
@@ -419,9 +419,9 @@ function Home() {
                   src="src/assets/gif/coin.png"
                   alt="Static Image"
                 /> */}
-                <div className="px-4 max-md:mt-4 flex justify-center">
+                <div className="min-w-60 min-h-60 aspect-square max-h-80 max-w-80 max-md:mt-4 flex justify-center">
                   <div
-                    className="max-h-72 max-w-72 p-4 rounded-full circle-outer"
+                    className="w-full h-full p-4 rounded-full circle-outer"
                     onClick={handleCardClick}
                   >
                     <div className="w-full h-full rounded-full circle-inner">
@@ -434,7 +434,7 @@ function Home() {
                   </div>
                 </div>
               </div>
-              <div className="flex mb-2">
+              <div className="flex mb-2 w-full justify-start">
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/2550/2550403.png"
                   alt=""
