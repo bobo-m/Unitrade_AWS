@@ -22,13 +22,13 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "/company", // Base URL set karein agar app `/company` path par hosted hai
+  base: "/company/", // Base URL set karein agar app `/company` path par hosted hai
   server: {
     host: true, // Sabhi IPs par listen karne ke liye
     port: 5000, // Custom port set karein
     proxy: {
       '/api': { // Ensure the proxy path starts with '/'
-        target: "https://theunitradehub.com/api/v1", // Backend API ka target URL
+        target: "https://theunitradehub.com/admin/api/v1", // Backend API ka target URL
         changeOrigin: true, // CORS issues handle karne ke liye
         rewrite: (path) => path.replace(/^\/api/, ''), // '/api' prefix hatane ke liye
       },
