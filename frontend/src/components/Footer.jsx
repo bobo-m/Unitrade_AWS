@@ -79,10 +79,10 @@ function Footer() {
           }}
         >
           <img
-            src={wallet}
-            alt="tasks"
+            src={toll}
+            alt="withdrawal"
             className={`w-6 h-6 transition-opacity duration-200 ${
-              activePage === "tasks" ? "opacity-100" : "opacity-50"
+              activePage === "withdrawal" ? "opacity-100" : "opacity-50"
             }`}
           />
           {/* <img src={earn} alt="Earn" className={`w-6 h-6 transition-opacity duration-200 ${activePage === 'tasks' ? 'opacity-100' : 'opacity-50'}`} /> */}
@@ -131,12 +131,13 @@ function Footer() {
           }}
         >
           <img
-            src={toll}
-            alt="withdrawal"
+            src={wallet}
+            alt="tasks"
             className={`w-6 h-6 transition-opacity duration-200 ${
-              activePage === "withdrawal" ? "opacity-100" : "opacity-50"
+              activePage === "tasks" ? "opacity-100" : "opacity-50"
             }`}
           />
+
           {/* <img
           src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ6nn3a5smm55h4gH0ppipz_I-UqR8e_dMoH1yE-SYZnx_DB-95"
           alt="Wallet"

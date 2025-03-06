@@ -87,10 +87,10 @@ function Home() {
 
   const handleCardClick = (e) => {
     if (pendingCoin?.pending_coin === 0) {
-      if (!warningShown) {
-        toast.warn("You have no coins.");
-        setWarningShown(true);
-      }
+      // if (!warningShown) {
+      //   toast.warn("You have no coins.");
+      //   setWarningShown(true);
+      // }
       return;
     }
 
@@ -421,7 +421,7 @@ function Home() {
                 /> */}
                 <div className="px-4 max-md:mt-4 flex justify-center">
                   <div
-                    className="max-h-60 max-w-60 p-4 rounded-full circle-outer"
+                    className="max-h-72 max-w-72 p-4 rounded-full circle-outer"
                     onClick={handleCardClick}
                   >
                     <div className="w-full h-full rounded-full circle-inner">
