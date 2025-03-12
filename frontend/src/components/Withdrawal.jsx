@@ -105,6 +105,10 @@ function Withdrawal() {
       setShowSendPopup(false);
       // setShowHistoryPopup(true);
       navigate("/history");
+    } else if (index === 3) {
+      setShowReceivePopup(false);
+      setShowSendPopup(false);
+      navigate("/received");
     }
   };
 
@@ -345,7 +349,7 @@ function Withdrawal() {
                   <p>{userData ? userData.coins : "0"}</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mb-4">
+                <div className="grid grid-cols-3 gap-2 mb-4">
                   {/* Send Button */}
                   <div
                     onClick={() => handleButtonShare()}
@@ -355,6 +359,19 @@ function Withdrawal() {
                       <BiSolidUpvote size={22} />
                     </div>
                     <span className="text-xs text-center font-Inter">Send</span>
+                  </div>
+
+                  {/* Received Button */}
+                  <div
+                    onClick={() => handleIconClick(3)}
+                    className="text-white mx-auto cursor-pointer flex flex-col items-center transition duration-300 ease-in-out opacity-100"
+                  >
+                    <div className="rounded-full w-8 h-8 bg-[#303030] flex justify-center items-center rotate-180">
+                      <BiSolidUpvote size={22} />
+                    </div>
+                    <span className="text-xs text-center font-Inter">
+                      Received
+                    </span>
                   </div>
 
                   {/* History Button */}

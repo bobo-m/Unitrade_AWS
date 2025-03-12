@@ -225,6 +225,7 @@ function Tasks() {
   };
 
   const handleCheckButtonClick = (task, questId) => {
+    setLoadingState((prevState) => ({ ...prevState, [task]: true }));
     const currentTime = Date.now(); // Get the current time
     const watchStartTime = watchTimes[task] || 0; // Get the start time of the task
     const timeSpentInMilliseconds = currentTime - watchStartTime; // Calculate time spent in milliseconds
@@ -267,6 +268,9 @@ function Tasks() {
 
       // Mark the task as not yet watched completely
       setIsVideoWatched((prev) => ({ ...prev, [task]: false }));
+      setTimeout(() => {
+        setLoadingState((prevState) => ({ ...prevState, [task]: false }));
+      }, 2000);
     }
   };
 
@@ -490,7 +494,7 @@ function Tasks() {
         <div className="w-full bg-black text-white  flex flex-col max-w-lg h-screen sm:mx-auto  font-Inter  ">
           {/* Header Section */}
           <Header />
-          <div
+          {/* <div
             style={{
               position: "absolute",
               width: "239px",
@@ -506,7 +510,7 @@ function Tasks() {
               alt=""
               style={{ width: "100%", height: "100%" }}
             />
-          </div>
+          </div> */}
           <div className="flex-grow overflow-y-auto">
             <div className="px-2 py-6 h-full z-10">
               {/* <Logo /> */}
@@ -533,7 +537,7 @@ function Tasks() {
                 COIN QUESTS
               </h1>
 
-              <div className=" h-fit pb-16 ">
+              <div className="h-fit pb-16 ">
                 <div className="mt-4">
                   {rows &&
                     rows.map((row, index) => (
@@ -691,7 +695,7 @@ function Tasks() {
               </div>
             </div>
           </div>
-          <div
+          {/* <div
             style={{
               position: "absolute",
               width: "243px",
@@ -707,7 +711,7 @@ function Tasks() {
               alt=""
               style={{ width: "100%", height: "100%" }}
             />
-          </div>
+          </div> */}
         </div>
       )}
 

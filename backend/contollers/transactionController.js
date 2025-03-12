@@ -177,6 +177,8 @@ exports.allTransactions = catchAsyncErrors(async (req, res, next) => {
         ut.trans_doc,
         DATE_FORMAT(ut.data_created, "%d-%m-%Y %H:%i:%s") AS created_date, -- Created Date
         ut.status AS transaction_status,      -- Transaction Status
+        ut.trans_id,                           -- Transcation ID for selling
+        ut.utr_no,                             -- UTR number
         u.user_name AS user_name,             -- User's Name (from users table)
         ud.upi_id AS upi_id,                  -- UPI ID (from user_data)
         c.user_name AS company_name           -- Company's Name (from users table)

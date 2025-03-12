@@ -730,6 +730,7 @@ exports.loginCompanyApi = catchAsyncErrors(async (req, res, next) => {
     user: {
       id: user.id,
       mobile: user.mobile,
+      type: user.user_type
       // Add any other user details you want to include in the response
     },
   });
@@ -1039,12 +1040,12 @@ exports.addCoinRangeApi = catchAsyncErrors(async (req, res, next) => {
 
     const numericRate = parseFloat(rate);
     if (
-      isNaN(min_coins) || 
-      isNaN(max_coins) || 
-      isNaN(numericRate) || 
-      min_coins <= 0 || 
-      max_coins <= 0 || 
-      numericRate <= 0 || 
+      isNaN(min_coins) ||
+      isNaN(max_coins) ||
+      isNaN(numericRate) ||
+      min_coins <= 0 ||
+      max_coins <= 0 ||
+      numericRate <= 0 ||
       min_coins > max_coins
     ) {
       return next(
@@ -1193,8 +1194,8 @@ exports.reqGetUnapprovedWithDocApi = async (req, res, next) => {
     }
 
     // Query the database for transactions where trans_doc is not null and status is unapproved
- const userTransactions = await db.query(
-  `SELECT 
+    const userTransactions = await db.query(
+      `SELECT 
     ut.id AS transaction_id, 
     ut.*, 
     u.user_name, 
@@ -1213,8 +1214,8 @@ exports.reqGetUnapprovedWithDocApi = async (req, res, next) => {
     ut.company_id = ? 
     AND ut.trans_doc IS NOT NULL 
     AND ut.status != 'approved'`,
-  [userId] // Pass the userId as the parameter here
-);
+      [userId] // Pass the userId as the parameter here
+    );
 
 
     // Flatten the result if it’s an array of arrays
@@ -1407,12 +1408,12 @@ exports.uploadTransactionDocApi = catchAsyncErrors(async (req, res, next) => {
       "UPDATE user_transction SET utr_no = ?, trans_id = ?, status = ?";
     let userData = [utr_no, trans_id, "waiting"];
 
-   if (trans_doc) {
+    if (trans_doc) {
       userQuery += ", trans_doc = ?";
       userData.push(trans_doc);
     }
 
-   userQuery += " WHERE id = ?";
+    userQuery += " WHERE id = ?";
     userData.push(transaction_id);
 
     const updateResult = await db.query(userQuery, userData);

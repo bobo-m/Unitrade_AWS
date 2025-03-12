@@ -507,6 +507,7 @@ exports.loginUserApi = catchAsyncErrors(async (req, res, next) => {
         user: {
           id: user.id,
           mobile: user.mobile,
+          userType: user.user_type
         },
         status,          // Send status in response
         pay_confirm: payConfirm // Send pay_confirm in response
@@ -1909,7 +1910,6 @@ exports.createSellTransaction = async (req, res, next) => {
     }
 
     const userName = userData[0]?.user_name;
-    console.log(userName);
 
     // Step 4: Create transaction in the database
     const [transactionResult] = await db.query(
@@ -2191,24 +2191,26 @@ exports.getUserHistory = catchAsyncErrors(async (req, res, next) => {
   try {
     const result = await db.query(
       `SELECT 
-          user_id, 
-          transaction_id, 
-          coin_operation, 
-          status, 
-          earn_coin, 
-          pending_coin, 
-          type, 
-          company_id, 
-          title,
+          uca.user_id, 
+          uca.transaction_id, 
+          uca.coin_operation, 
+          uca.status, 
+          uca.earn_coin, 
+          uca.pending_coin, 
+          uca.type, 
+          uca.company_id, 
+          uca.title,
+          u.user_name,
           CASE 
-              WHEN type = 'withdrawal' THEN date_approved 
-              ELSE date_entered 
+              WHEN type = 'withdrawal' THEN uca.date_approved 
+              ELSE uca.date_entered 
           END AS transaction_date -- Using a clean alias for better handling
-       FROM usercoin_audit
-       WHERE user_id = ? 
-         AND type != 'tap' 
+       FROM usercoin_audit AS uca 
+       LEFT JOIN users AS u on uca.transaction_id=u.id
+       WHERE uca.user_id = ? 
+         AND uca.type != 'tap' 
      AND NOT (
-         status = 'waiting' 
+         uca.status = 'waiting' 
          AND (type = 'withdrawal' OR type = 'quest')
      )
      ORDER BY date_entered DESC`,

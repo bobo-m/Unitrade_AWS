@@ -1,11 +1,14 @@
 import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from '../actions/authActions';
 import { SIGNUP_SUCCESS, SIGNUP_FAILURE } from '../actions/authActions';
 import { PASSWORD_RESET_REQUEST, PASSWORD_RESET_SUCCESS, PASSWORD_RESET_FAILURE, } from '../actions/authActions';
-import { PASSWORD_UPDATE_REQUEST, PASSWORD_UPDATE_SUCCESS, PASSWORD_UPDATE_FAIL, CLEAR_AUTH_STATE,} from '../actions/authActions';
+import { PASSWORD_UPDATE_REQUEST, PASSWORD_UPDATE_SUCCESS, PASSWORD_UPDATE_FAIL, CLEAR_AUTH_STATE, } from '../actions/authActions';
 
 const initialState = {
   user: typeof window !== 'undefined' && localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user'))
+    ? (() => {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      return storedUser?.user?.type === "company" ? storedUser : null;
+    })()
     : null,
   error: null,
   loading: false,
@@ -18,19 +21,19 @@ const authReducer = (state = initialState, action) => {
 
     case PASSWORD_UPDATE_REQUEST:
       return { ...state, loading: true };
-  case PASSWORD_UPDATE_SUCCESS:
+    case PASSWORD_UPDATE_SUCCESS:
       return { ...state, loading: false, message: action.payload };
-  case PASSWORD_UPDATE_FAIL:
+    case PASSWORD_UPDATE_FAIL:
       return { ...state, loading: false, error: action.payload };
-      case CLEAR_AUTH_STATE:
-        return { ...state, message: null, error: null }; 
-        
+    case CLEAR_AUTH_STATE:
+      return { ...state, message: null, error: null };
+
 
     case PASSWORD_RESET_REQUEST:
       return { ...state, loading: true };
-  case PASSWORD_RESET_SUCCESS:
+    case PASSWORD_RESET_SUCCESS:
       return { ...state, loading: false, message: action.payload };
-  case PASSWORD_RESET_FAILURE:
+    case PASSWORD_RESET_FAILURE:
       return { ...state, loading: false, error: action.payload };
 
     case SIGNUP_SUCCESS:

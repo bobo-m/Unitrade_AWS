@@ -1,5 +1,5 @@
 import { fetchData, API_URLS } from '../utils/home';
-import { fetcherGet , fetcherPost } from '../fetcher';  
+import { fetcherGet, fetcherPost } from '../fetcher';
 import { BACKEND_URL } from '../../src/config';
 import { toast } from "react-toastify";
 
@@ -35,31 +35,31 @@ export const fetchAPIData = (apiName) => async (dispatch) => {
 
 
 export const FETCH_ME_REQUEST = 'FETCH_ME_REQUEST';
-export const SET_ME_DATA  = 'SET_ME_DATA';
+export const SET_ME_DATA = 'SET_ME_DATA';
 export const FETCH_ME_FAILURE = 'FETCH_ME_FAILURE';
 
 export const FETCH_COIN_REQUEST = 'FETCH_COIN_REQUEST';
-export const SET_COIN_DATA  = 'SET_COIN_DATA';
+export const SET_COIN_DATA = 'SET_COIN_DATA';
 export const FETCH_COIN_FAILURE = 'FETCH_COIN_FAILURE';
 
 export const FETCH_REFFRAL_REQUEST = 'FETCH_REFFRAL_REQUEST';
-export const SET_REFFRAL_DATA  = 'SET_REFFRAL_DATA';
+export const SET_REFFRAL_DATA = 'SET_REFFRAL_DATA';
 export const FETCH_REFFRAL_FAILURE = 'FETCH_REFFRAL_FAILURE';
 
 export const FETCH_HISTORY_REQUEST = 'FETCH_HISTORY_REQUEST';
-export const SET_HISTORY_DATA  = 'SET_HISTORY_DATA';
+export const SET_HISTORY_DATA = 'SET_HISTORY_DATA';
 export const FETCH_HISTORY_FAILURE = 'FETCH_HISTORY_FAILURE';
 
 export const FETCH_QUEST_HISTORY_REQUEST = 'FETCH_QUEST_HISTORY_REQUEST';
-export const SET_QUEST_HISTORY_DATA  = 'SET_QUEST_HISTORY_DATA';
+export const SET_QUEST_HISTORY_DATA = 'SET_QUEST_HISTORY_DATA';
 export const FETCH_QUEST_HISTORY_FAILURE = 'FETCH_QUEST_HISTORY_FAILURE';
 
 export const FETCH_WITHDRAWAL_REQUEST = 'FETCH_WITHDRAWAL_REQUEST';
-export const SET_WITHDRAWAL_DATA  = 'SET_WITHDRAWAL_DATA';
+export const SET_WITHDRAWAL_DATA = 'SET_WITHDRAWAL_DATA';
 export const FETCH_WITHDRAWAL_FAILURE = 'FETCH_WITHDRAWAL_FAILURE';
 
 export const FETCH_STATS_REQUEST = 'FETCH_STATS_REQUEST';
-export const SET_STATS_DATA  = 'SET_STATS_DATA';
+export const SET_STATS_DATA = 'SET_STATS_DATA';
 export const FETCH_STATS_FAILURE = 'FETCH_STATS_FAILURE';
 
 export const TRANSFER_COINS_REQUEST = "TRANSFER_COINS_REQUEST";
@@ -80,7 +80,7 @@ const fetchMeRequest = () => {
 };
 
 // Fetch User Success Action
-const setMeData  = (data) => {
+const setMeData = (data) => {
   return {
     type: SET_ME_DATA,
     payload: data,
@@ -102,7 +102,7 @@ const fetchCoinRequest = () => {
 };
 
 // Fetch User Success Action
-const setCoinData  = (data) => {
+const setCoinData = (data) => {
   return {
     type: SET_COIN_DATA,
     payload: data,
@@ -119,7 +119,7 @@ const fetchCoinFailure = (error) => {
 
 export const fetchMeData = () => async (dispatch) => {
   dispatch(fetchMeRequest());
-  
+
   try {
     const data = await fetcherGet(`${BACKEND_URL}/api/v1/api-me`);
     dispatch(setMeData(data));
@@ -129,7 +129,7 @@ export const fetchMeData = () => async (dispatch) => {
 };
 export const fetchCoinData = () => async (dispatch) => {
   dispatch(fetchCoinRequest());
-  
+
   try {
     const data = await fetcherGet(`${BACKEND_URL}/api/v1/pending-coins`);
     dispatch(setCoinData(data));
@@ -139,8 +139,8 @@ export const fetchCoinData = () => async (dispatch) => {
 };
 
 export const fetchReffralData = () => async (dispatch) => {
-  dispatch({type: FETCH_REFFRAL_REQUEST});
-  
+  dispatch({ type: FETCH_REFFRAL_REQUEST });
+
   try {
     const data = await fetcherGet(`${BACKEND_URL}/api/v1/referral-code`);
     dispatch({ type: SET_REFFRAL_DATA, payload: data });
@@ -152,10 +152,11 @@ export const fetchReffralData = () => async (dispatch) => {
   }
 };
 export const fetchHistory = () => async (dispatch) => {
-  dispatch({type: FETCH_HISTORY_REQUEST});
-  
+  dispatch({ type: FETCH_HISTORY_REQUEST });
+
   try {
     const data = await fetcherGet(`${BACKEND_URL}/api/v1/user-history`);
+    console.log('API Response:', data); // Debugging
     dispatch({ type: SET_HISTORY_DATA, payload: data });
   } catch (error) {
     dispatch({
@@ -166,8 +167,8 @@ export const fetchHistory = () => async (dispatch) => {
 };
 
 export const fetchQuestHistory = () => async (dispatch) => {
-  dispatch({type: FETCH_QUEST_HISTORY_REQUEST});
-  
+  dispatch({ type: FETCH_QUEST_HISTORY_REQUEST });
+
   try {
     const data = await fetcherGet(`${BACKEND_URL}/api/v1/quest-history`);
     dispatch({ type: SET_QUEST_HISTORY_DATA, payload: data });
@@ -180,12 +181,12 @@ export const fetchQuestHistory = () => async (dispatch) => {
 };
 
 export const fetchWithdrawal = () => async (dispatch) => {
-  dispatch({type: FETCH_WITHDRAWAL_REQUEST});
-  
+  dispatch({ type: FETCH_WITHDRAWAL_REQUEST });
+
   try {
     const data = await fetcherGet(`${BACKEND_URL}/api/v1/user-waiting-requests`);
     console.log('API Response:', data); // Debugging
-    dispatch({ type: SET_WITHDRAWAL_DATA,   payload: data || [] });
+    dispatch({ type: SET_WITHDRAWAL_DATA, payload: data || [] });
   } catch (error) {
     dispatch({
       type: FETCH_WITHDRAWAL_FAILURE,
@@ -195,12 +196,12 @@ export const fetchWithdrawal = () => async (dispatch) => {
 };
 
 export const fetchStats = () => async (dispatch) => {
-  dispatch({type: FETCH_STATS_REQUEST});
-  
+  dispatch({ type: FETCH_STATS_REQUEST });
+
   try {
     const data = await fetcherGet(`${BACKEND_URL}/api/v1/stats-data`);
     console.log('API Response:', data); // Debugging
-    dispatch({ type: SET_STATS_DATA,   payload: data || [] });
+    dispatch({ type: SET_STATS_DATA, payload: data || [] });
   } catch (error) {
     dispatch({
       type: FETCH_STATS_FAILURE,

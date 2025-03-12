@@ -19,6 +19,7 @@ import Preloader from "./components/Preloader";
 import Payment from "./components/Payment";
 import Withdrawal from "./components/Withdrawal";
 import History from "./components/History";
+import Received from "./components/Received";
 import Profile from "./components/Profile";
 import AuthListener from "./components/AuthListener";
 import TermsAndConditions from "./components/Terms";
@@ -35,11 +36,11 @@ function App() {
   // const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const token = localStorage.getItem("user");
-useEffect(() => {
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 1000); // 1 second delay for smooth transition
-}, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); // 1 second delay for smooth transition
+  }, []);
 
   // useEffect(() => {
   //   const checkDevice = () => {
@@ -197,6 +198,7 @@ useEffect(() => {
                 <Route path="/withdrawal" element={<Withdrawal />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/received" element={<Received />} />
                 <Route path="/instruction" element={<InstructionPage />} />
               </Route>
             </Routes>

@@ -22,7 +22,7 @@ import KeyboardFix from "./components/KeyboardFix"; // Import the KeyboardPaddin
 store.dispatch(loadUserFromLocalStorage());
 function App({ Component, pageProps }) {
   const [isLoading, setIsLoading] = useState(true);
-  const token = localStorage.getItem("user");
+  const token = JSON.parse(localStorage.getItem('user'))?.user?.type;
 
   useEffect(() => {
     // Initialize Telegram WebApp

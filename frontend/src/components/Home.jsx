@@ -326,7 +326,7 @@ function Home() {
           <div className="flex flex-col items-center space-y-2 flex-grow">
             <div
               // onClick={handleNavigate}
-              className="bg-blue-600 flex-grow text-white aspect-square min-h-min min-w-min max-h-28 max-w-24 md:h-24 md:w-28 lg:w-20 lg:h-20 flex justify-center items-center rounded-full"
+              className="bg-blue-600 flex-grow text-white aspect-square min-h-min min-w-min max-h-24 max-w-24 md:h-24 md:w-28 lg:w-20 lg:h-20 flex justify-center items-center rounded-full"
             >
               {userData?.user_photo ? (
                 <img
@@ -397,9 +397,9 @@ function Home() {
           )}
 
           {/* Wallet Section */}
-          <div className="flex flex-col mt-2 px-3 max-md:py-4 flex-grow">
-            <div className="mb-auto flex items-center justify-center flex-col flex-shrink">
-              <div className="flex justify-center items-center my-2 relative cursor-pointer flex-shrink">
+          <div className="flex flex-col mt-2 px-3 max-md:py-4 flex-grow min-h-0">
+            <div className="mb-auto flex items-center justify-center flex-col flex-shrink min-h-0">
+              <div className="flex justify-center items-center my-2 relative cursor-pointer flex-shrink h-full min-h-60">
                 {/* GIF Container */}
                 {/* <img
                   className={`w-72 h-72  object-cover absolute z-10 ${
@@ -419,7 +419,7 @@ function Home() {
                   src="src/assets/gif/coin.png"
                   alt="Static Image"
                 /> */}
-                <div className="min-w-60 min-h-60 aspect-square max-h-72 max-w-72 max-md:mt-4 flex justify-center">
+                <div className="h-full aspect-square max-h-72 max-w-72 max-md:mt-4 flex justify-center">
                   <div
                     className="w-full h-full p-4 rounded-full circle-outer"
                     onClick={handleCardClick}

@@ -6,7 +6,8 @@ import { useState } from "react";
 const CustomSwiper = ({
   banners,
   followed,
-  togglePopup, handleSubmit,
+  togglePopup,
+  handleSubmit,
   isVideoWatched,
   handleWatchButtonClick,
   handleCheckButtonClick,
@@ -20,7 +21,6 @@ const CustomSwiper = ({
   const [isRequestInProgress, setRequestInProgress] = useState({});
 
   const handleButtonClick = async (taskKey, action, ...args) => {
-
     if (isRequestInProgress[taskKey]) return; // Prevent multiple clicks for the same task
 
     setRequestInProgress((prev) => ({ ...prev, [taskKey]: true }));
@@ -55,8 +55,8 @@ const CustomSwiper = ({
         {banners &&
           banners.map((banner, index) => {
             const taskKey = `task${banner.quest_id}`;
-            const bgGradient = gradientBackgrounds[index % gradientBackgrounds.length];
-
+            const bgGradient =
+              gradientBackgrounds[index % gradientBackgrounds.length];
             return (
               <SwiperSlide key={banner.quest_id}>
                 <div
@@ -85,7 +85,10 @@ const CustomSwiper = ({
                   <div className="flex justify-between">
                     {banner.status === "completed" ? (
                       <p className="bg-[#282828] text-white w-20 flex justify-center py-2 rounded-full text-xs font-bold">
-                        <FaRegCheckCircle size={20} className="text-[#606060]" />
+                        <FaRegCheckCircle
+                          size={20}
+                          className="text-[#606060]"
+                        />
                       </p>
                     ) : banner.status === "waiting" ? (
                       <p
@@ -97,43 +100,53 @@ const CustomSwiper = ({
                     ) : (
                       <>
                         {/* Watch Task */}
-                        {banner.activity === "watch" && !watchTimes[taskKey] && (
-                          <a
-                            href={banner.quest_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() =>
-                              handleButtonClick(
-                                taskKey,
-                                handleWatchButtonClick,
-                                taskKey,
-                                // banner.quest_url,
-                                banner.duration
-                              )
-                            }
-                            className="bg-gray-900 text-white w-20 flex justify-center py-1.5 rounded-full text-sm font-bold"
-                          >
-                            Watch
-                          </a>
-                        )}
+                        {banner.activity === "watch" &&
+                          !watchTimes[taskKey] && (
+                            <a
+                              href={banner.quest_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() =>
+                                handleButtonClick(
+                                  taskKey,
+                                  handleWatchButtonClick,
+                                  taskKey,
+                                  // banner.quest_url,
+                                  banner.duration
+                                )
+                              }
+                              className="bg-gray-900 text-white w-20 flex justify-center py-1.5 rounded-full text-sm font-bold"
+                            >
+                              Watch
+                            </a>
+                          )}
 
                         {banner.activity === "watch" && watchTimes[taskKey] && (
                           <button
-                          disabled={loadingState[taskKey] || isRequestInProgress[taskKey]}
+                            disabled={
+                              loadingState[taskKey] ||
+                              isRequestInProgress[taskKey]
+                            }
                             onClick={() => {
-                              setRequestInProgress(prev => ({ ...prev, [taskKey]: true }));
-                              handleCheckButtonClick(
-                                taskKey,
-                                banner.quest_id
-                              )
-                            }
-                             
-                            }
+                              setRequestInProgress((prev) => ({
+                                ...prev,
+                                [taskKey]: true,
+                              }));
+                              handleCheckButtonClick(taskKey, banner.quest_id);
+                              setRequestInProgress((prev) => ({
+                                ...prev,
+                                [taskKey]: false,
+                              }));
+                            }}
                             className={`bg-gray-900 text-white w-20 flex justify-center py-1.5 rounded-full text-sm font-bold ${
-                              loadingState[taskKey] || isRequestInProgress[taskKey] ? "opacity-75 cursor-not-allowed" : ""
+                              loadingState[taskKey] ||
+                              isRequestInProgress[taskKey]
+                                ? "opacity-75 cursor-not-allowed"
+                                : ""
                             }`}
                           >
-                            {loadingState[taskKey] || isRequestInProgress[taskKey] ? (
+                            {loadingState[taskKey] ||
+                            isRequestInProgress[taskKey] ? (
                               <div className="flex justify-center items-center">
                                 <div className="spinner"></div>
                               </div>
@@ -182,29 +195,35 @@ const CustomSwiper = ({
                           </button>
                         )} */}
 
-{banner.activity === "follow" && followed[taskKey] && (
-  <button
-    onClick={() => {
-      if (banner.screenshot_required === 0) {
-        // Directly call the API if no screenshot is required
-        handleSubmit(taskKey, banner.quest_id, 0);
-      } else {
-        // Open the popup if a screenshot is required
-        handleButtonClick(taskKey, togglePopup, taskKey, banner.quest_id, banner.screenshot_required,);
-      }
-    }}
-    className={`bg-gray-900 text-white w-20 flex justify-center py-1.5 rounded-full text-sm font-bold ${
-      isRequestInProgress[taskKey] ? "opacity-75 cursor-wait" : ""
-    }`}
-  >
-    Verify
-  </button>
-)}
+                        {banner.activity === "follow" && followed[taskKey] && (
+                          <button
+                            disabled={loadingState[taskKey]}
+                            onClick={() => {
+                              if (banner.screenshot_required === 0) {
+                                // Directly call the API if no screenshot is required
+                                handleSubmit(taskKey, banner.quest_id, 0);
+                              } else {
+                                // Open the popup if a screenshot is required
+                                handleButtonClick(
+                                  taskKey,
+                                  togglePopup,
+                                  taskKey,
+                                  banner.quest_id,
+                                  banner.screenshot_required
+                                );
+                              }
+                            }}
+                            className={`bg-gray-900 text-white w-20 flex justify-center py-1.5 rounded-full text-sm font-bold ${
+                              isRequestInProgress[taskKey]
+                                ? "opacity-75 cursor-wait"
+                                : ""
+                            }`}
+                          >
+                            Verify
+                          </button>
+                        )}
                       </>
                     )}
-
-
-
                   </div>
                 </div>
               </SwiperSlide>
