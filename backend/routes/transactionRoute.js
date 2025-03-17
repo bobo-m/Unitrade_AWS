@@ -3,7 +3,8 @@ const multer = require("multer");
 const {
   allTransactions,
   approveTransaction,
-  createOrder
+  createOrder,
+  verifyPayment
 } = require("../contollers/transactionController");
 const {
   isAuthenticatedUser,
@@ -24,6 +25,8 @@ router
   .route("/approveTransaction")
   .post(isAuthenticatedUser, approveTransaction);
 
-router.route("/create-order").post(createOrder)
+router.route("/create-order").post(createOrder);
+
+router.route("/verify-payment").post(verifyPayment);
 
 module.exports = router;

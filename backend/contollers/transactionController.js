@@ -10,6 +10,9 @@ const localStorage = new LocalStorage("./scratch");
 const dotenv = require("dotenv");
 dotenv.config({ path: "backend/config/config.env" });
 const Razorpay = require("razorpay");
+const crypto = require("crypto")
+const { distributeCoins } = require("../contollers/userController")
+const sendEmail = require("../utils/sendEmail");
 
 // const table_name = user_transction;
 // const module_title = Model.module_title;
@@ -442,6 +445,87 @@ exports.approveTransaction = catchAsyncErrors(async (req, res, next) => {
 //   }
 // });
 
+
+const activateUser = async (userId) => {
+  console.log(userId)
+  const newStatus = 1;
+  console.log("automated activate user function called")
+  try {
+    //update pay_confirm in the database
+    const updatePayConfirmQuery = "UPDATE users SET pay_confirm = 1 WHERE id = ?";
+    const [payConfirmResult] = await db.query(updatePayConfirmQuery, [userId]);
+    // Log result to debug
+    console.log("Pay confirm update result:", payConfirmResult);
+
+    if (!payConfirmResult || payConfirmResult.affectedRows === 0) {
+      return { error: true, message: "Failed to update pay_confirm field in users table" };
+    }
+
+    // Update user status in the database
+    await QueryModel.updateData("users", { status: newStatus }, { id: userId });
+    console.info(`User status updated for User ID: ${userId}`);
+
+    // Distribute coins based on activation
+    await distributeCoins(userId);
+
+    const [userData] = await db.query(
+      "SELECT email, user_name FROM users WHERE id = ?",
+      [userId]
+    );
+    if (!userData || userData.length === 0) {
+      return { error: true, message: "User email not found" };
+    }
+    const userEmail = userData[0]?.email;
+    const userName = userData[0]?.user_name;
+    // Step 2: Construct the email body
+    const emailMessage = `
+<html>
+  <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; padding: 20px;">
+    <p>Hi ${userName},</p>
+
+    <p>🎉 <strong>Congratulations!</strong> Your Unitradehub account has been successfully activated. We're thrilled to have you on board.</p>
+
+    <p>🌟 <strong>Here's what you can do now:</strong></p>
+
+    <p>💰 <strong>2000 Coins Awaiting You!</strong><br>
+       You’ve received 2000 coins in your pending balance. Complete fun tasks, earn more coins, and transfer them to your total balance by tapping!</p>
+
+    <p>🙌 <strong>Earn More Coins!</strong><br>
+       Invite your friends and earn referral rewards 🤑.<br>
+       Complete exciting tasks to earn even more coins.</p>
+
+    <p>💼 <strong>Share Coins & Earn Money!</strong><br>
+       Once you've accumulated enough coins, share them with companies at the best rates. We'll ensure the payment is transferred directly to your account.</p>
+
+    <p>👉 <strong>Ready to get started?</strong> Log in to Unitradehub via Telegram now!</p>
+
+    <p>
+      <a href="https://t.me/TheUnitadeHub_bot?startapp=1" 
+         style="color: #1a73e8; text-decoration: none; font-weight: bold;">🔗 Click here to access Unitradehub</a>
+    </p>
+
+    <p>If you have any questions, feel free to contact our support team. We're here to help you every step of the way!</p>
+
+    <p>Welcome to the world of trading, earning, and growing 🚀.<br>Team Unitradehub</p>
+  </body>
+</html>
+`;
+
+    const emailOptions = {
+      email: userEmail, // User's email address
+      subject: "Welcome to Unitradehub! Your Account is Now Activated 🚀",
+      message: emailMessage, // Passing the HTML message content here
+    };
+
+    await sendEmail(emailOptions); // Send the email to the user's email address
+    // Send a JSON response
+    return { message: "success" }
+  } catch (error) {
+    console.error("Error updating user status:", error);
+    return { error: `Error updating user status: ${error}` }
+  }
+}
+
 exports.createOrder = catchAsyncErrors(async (req, res, next) => {
   try {
     const razorpay = new Razorpay({ key_id: process.env.RAZORPAY_KEY_ID, key_secret: process.env.RAZORPAY_KEY_SECRET })
@@ -455,5 +539,39 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
     res.json(order)
   } catch (err) {
     res.status(500).send("Error");
+  }
+})
+
+exports.verifyPayment = catchAsyncErrors(async (req, res, next) => {
+  const { userId, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+  console.log(userId)
+  try {
+    const sha = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+    generated_signature = sha.digest("hex");
+
+    console.log("Generated signature: ", generated_signature, "inside verification fucntion")
+    console.log("generated the signnature")
+    if (generated_signature !== razorpay_signature) {
+      res.status(400).json({ message: "Transaction is not verified" });
+    }
+
+    console.log("signature verified");
+    const activateResponse = await activateUser(userId);
+    console.log("user activated", activateResponse)
+
+    if (activateResponse.message !== "success") {
+      res.status(400).json({ message: "Error Activating User" });
+    }
+
+    res.status(200).json({
+      message: "success",
+      orderId: razorpay_order_id,
+      paymentId: razorpay_payment_id
+    })
+  } catch (error) {
+    res.status(400).json({
+      error, message: "Transaction is not verified"
+    })
   }
 })

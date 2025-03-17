@@ -555,29 +555,61 @@ exports.allUsers = catchAsyncErrors(async (req, res, next) => {
   //  WHERE u.user_type IN (?)`,
   //   ["user"]
   // );
-  const users = await db.query(
+  let page = Math.floor(parseInt(req.query.start) / parseInt(req.query.length) + 1) || 1; // Convert start to page number
+  let limit = parseInt(req.query.length) || 10;
+  let offset = (page - 1) * limit;
+
+  const [[totalCountResult]] = await db.query(`
+    SELECT COUNT(*) AS total FROM users WHERE user_type IN (?)
+  `, ["user"]);
+
+  const totalUsers = totalCountResult.total;
+  // Extract search query (if any)
+  let searchQuery = req.query.search?.trim();
+  let isSearch = searchQuery && searchQuery.length > 0;
+  let searchPattern = `%${searchQuery}%`;
+
+
+  const [users] = await db.query(
     `
-  SELECT 
-      u.id,
-      u.user_name,
-      u.email,
-      u.mobile,
-      DATE_FORMAT(u.date_created, "%d-%m-%Y") AS date_created,
-      ud.referral_code,
-      ud.pay_image,
-      ud.pending_coin,
-      ud.coins,
-ud.parent_id,
-      u.user_type,
-      u.status,
-      parent.user_name AS parent_user_name -- Fetch parent's user_name
-  FROM users u
-  INNER JOIN user_data ud ON u.id = ud.user_id
-  LEFT JOIN users parent ON ud.parent_id = parent.id -- Join parent user
-  WHERE u.user_type IN (?)
-  `,
-    ["user"]
+    SELECT 
+        u.id,
+        u.user_name,
+        u.email,
+        u.mobile,
+        DATE_FORMAT(u.date_created, "%d-%m-%Y") AS date_created,
+        ud.referral_code,
+        ud.pay_image,
+        ud.pending_coin,
+        ud.coins,
+        ud.parent_id,
+        u.user_type,
+        u.status,
+        parent.user_name AS parent_user_name,
+        (SELECT COUNT(*) FROM users u 
+         INNER JOIN user_data ud ON u.id = ud.user_id
+         LEFT JOIN users parent ON ud.parent_id = parent.id
+         WHERE u.user_type IN (?) 
+         ${isSearch ? `AND (u.user_name LIKE ? OR u.email LIKE ? OR u.mobile LIKE ? OR ud.referral_code LIKE ?)` : ``}
+        ) AS totalRecords
+    FROM users u
+    INNER JOIN user_data ud ON u.id = ud.user_id
+    LEFT JOIN users parent ON ud.parent_id = parent.id
+    WHERE u.user_type IN (?)
+    ${isSearch ? `AND (u.user_name LIKE ? OR u.email LIKE ? OR u.mobile LIKE ? OR ud.referral_code LIKE ?)` : ``}
+    LIMIT ? OFFSET ?`,
+    isSearch
+      ? ["user", searchPattern, searchPattern, searchPattern, searchPattern, "user", searchPattern, searchPattern, searchPattern, searchPattern, limit, offset]
+      : ["user", "user", limit, offset]
   );
+  if (req.xhr || req.query.draw) {
+    return res.json({
+      draw: req.query.draw, // Required for DataTables tracking
+      recordsTotal: totalUsers, // Total records in DB
+      recordsFiltered: totalUsers, // No filters applied, so same as total
+      data: users // Send user data in DataTables format
+    });
+  }
   res.render(module_slug + "/index", {
     layout: module_layout,
     title: module_single_title + " " + module_add_text,
@@ -1187,7 +1219,7 @@ exports.updateUserStatus = catchAsyncErrors(async (req, res, next) => {
     console.info(`User status updated for User ID: ${userId}`);
 
     // Distribute coins based on activation
-    await distributeCoins(userId);
+    await exports.distributeCoins(userId);
 
     const [userData] = await db.query(
       "SELECT email, user_name FROM users WHERE id = ?",
@@ -1253,7 +1285,7 @@ exports.updateUserStatus = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-async function distributeCoins(userId, performedByUserId) {
+exports.distributeCoins = async function (userId, performedByUserId) {
   // Step 1: Retrieve the one_coin_price from the settings table
   const settingsResult = await db.query(
     "SELECT one_coin_price FROM settings LIMIT 1" // Assuming there's only one row in the settings table
