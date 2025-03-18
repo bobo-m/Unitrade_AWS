@@ -94,6 +94,7 @@ const {
   getUserHistory,
   getFilteredUserHistory,
   getUserStats,
+  getUserNameFromReferralCode
   // checkUser,
 } = require("../contollers/userApiController");
 const {
@@ -233,5 +234,7 @@ router.post("/user-approve", isApiAuthenticatedUser, approveUserTransaction);
 
 
 router.get("/stats-data", isApiAuthenticatedUser, getUserStats);
+
+router.post("/user-name", isApiAuthenticatedUser, getUserNameFromReferralCode);
 
 module.exports = router;

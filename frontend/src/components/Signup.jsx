@@ -264,13 +264,13 @@ function Signup() {
     // <div className="w-full max-w-lg bg-black text-white rounded-lg shadow-lg font-Inter flex flex-col h-[700px] overflow-hidden pb-[120px]">
     //         <div id="content" className="p-6 space-y-6 flex-grow overflow-y-auto pb-[120px]">
     //           <h2 className="text-2xl font-bold text-center text-white mb-6">Create account</h2>
-    <div className="bg-black flex justify-center items-center h-screen overflow-y-auto">
+    <div className="bg-black flex justify-center min-h-screen overflow-y-auto">
       <ToastNotification
         message={toastMessage}
         show={showToast}
         setShow={setShowToast}
       />
-      <div className="w-full max-w-lg bg-black text-white rounded-lg shadow-lg font-Inter flex flex-col h-[100vh] overflow-hidden">
+      <div className="w-full max-w-lg bg-black text-white rounded-lg shadow-lg font-Inter flex flex-col h-full overflow-hidden">
         <div id="content" className="p-6 space-y-6 flex-grow">
           <h2 className="text-2xl font-bold text-center text-white mb-6">
             Create account

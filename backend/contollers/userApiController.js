@@ -2577,3 +2577,27 @@ exports.getUserStats = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Database query failed", 500));
   }
 });
+
+exports.getUserNameFromReferralCode = catchAsyncErrors(async (req, res) => {
+  const { referralCode } = req.body;
+
+  if (!referralCode) {
+    res.status(400).json({ error: "Referral Code missing" })
+  }
+
+  const [user] = await db.query(`
+    SELECT u.user_name
+    FROM user_data as ud
+    JOIN users as u ON ud.user_id=u.id
+    WHERE referral_code = ?
+    LIMIT 1
+  `, [referralCode])
+
+  // console.log(user)
+
+  if (!user.length) {
+    res.status(400).json({ error: "No user with the referral code" });
+  }
+
+  res.status(200).json({ userName: user[0].user_name });
+})

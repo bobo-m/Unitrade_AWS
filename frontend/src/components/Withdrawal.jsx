@@ -20,6 +20,8 @@ import Header from "./Header";
 import ellipse9 from "../images/Ellipse 9.png";
 import ellipse8 from "../images/Ellipse 8.png";
 import logo from "../assets/logo/U.png";
+import { BACKEND_URL } from "../config";
+import { fetcherGet, fetcherPost } from "../../store/fetcher";
 
 function Withdrawal() {
   const MySwal = withReactContent(Swal);
@@ -35,6 +37,7 @@ function Withdrawal() {
   const [selectedCoinRate, setSelectedCoinRate] = useState(null);
   const [company_id, setCompany_id] = useState(null);
   const [expandedCompanyId, setExpandedCompanyId] = useState(null); // State to track the expanded company
+  const [apiError, setApiError] = useState(""); // State for error message for the name of the receiver
 
   // Toggle function to expand/collapse a row
   const toggleExpandRow = (companyId) => {
@@ -166,12 +169,44 @@ function Withdrawal() {
     }));
   };
 
-  const handleSendInputChange = (e) => {
+  const handleSendInputChange = async (e) => {
     const { name, value } = e.target;
     setSendData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+
+    if (name === "recipientReferralCode") {
+      const referralCode = value.toUpperCase();
+      const referralCodeRegex = /^UNITRADE\d+$/;
+      if (!referralCodeRegex.test(referralCode)) {
+        setSendData((prevData) => {
+          const { receiver, ...filteredData } = prevData;
+          return filteredData;
+        });
+        setApiError("");
+      } else {
+        try {
+          const { userName } = await fetcherPost(
+            `${BACKEND_URL}/api/v1/user-name`,
+            {
+              referralCode: referralCode,
+            }
+          );
+          setSendData((prevData) => ({
+            ...prevData,
+            receiver: userName,
+          }));
+          setApiError("");
+        } catch (error) {
+          setApiError("No user found with the referral code");
+          setSendData((prevData) => {
+            const { receiver, ...filteredData } = prevData;
+            return filteredData;
+          });
+        }
+      }
+    }
   };
   const handleSendMoney = async () => {
     if (!sendData.amount || !sendData.recipientReferralCode) {
@@ -581,6 +616,7 @@ function Withdrawal() {
             sendData={sendData}
             setSendData={setSendData}
             userData={userData}
+            apiError={apiError}
           />
         )}
         {showHistoryPopup && <History closePopups={closePopups} />}
