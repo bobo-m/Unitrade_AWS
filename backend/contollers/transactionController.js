@@ -13,6 +13,8 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto")
 const { distributeCoins } = require("../contollers/userController")
 const sendEmail = require("../utils/sendEmail");
+const { Cashfree } = require("cashfree-pg")
+const { randomUUID } = require("crypto");
 
 // const table_name = user_transction;
 // const module_title = Model.module_title;
@@ -526,52 +528,118 @@ const activateUser = async (userId) => {
   }
 }
 
-exports.createOrder = catchAsyncErrors(async (req, res, next) => {
-  try {
-    const razorpay = new Razorpay({ key_id: process.env.RAZORPAY_KEY_ID, key_secret: process.env.RAZORPAY_KEY_SECRET })
-    const options = req.body;
-    const order = await razorpay.orders.create(options);
+// exports.createOrder = catchAsyncErrors(async (req, res, next) => {
+//   try {
+//     const razorpay = new Razorpay({ key_id: process.env.RAZORPAY_KEY_ID, key_secret: process.env.RAZORPAY_KEY_SECRET })
+//     const options = req.body;
+//     const order = await razorpay.orders.create(options);
 
-    if (!order) {
-      res.status(500).send("Error");
+//     if (!order) {
+//       res.status(500).send("Error");
+//     }
+
+//     res.json(order)
+//   } catch (err) {
+//     res.status(500).send("Error");
+//   }
+// })
+
+// exports.verifyPayment = catchAsyncErrors(async (req, res, next) => {
+//   const { userId, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+//   console.log(userId)
+//   try {
+//     const sha = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+//     sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+//     generated_signature = sha.digest("hex");
+
+//     console.log("Generated signature: ", generated_signature, "inside verification fucntion")
+//     console.log("generated the signnature")
+//     if (generated_signature !== razorpay_signature) {
+//       res.status(400).json({ message: "Transaction is not verified" });
+//     }
+
+//     console.log("signature verified");
+//     const activateResponse = await activateUser(userId);
+//     console.log("user activated", activateResponse)
+
+//     if (activateResponse.message !== "success") {
+//       res.status(400).json({ message: "Error Activating User" });
+//     }
+
+//     res.status(200).json({
+//       message: "success",
+//       orderId: razorpay_order_id,
+//       paymentId: razorpay_payment_id
+//     })
+//   } catch (error) {
+//     res.status(400).json({
+//       error, message: "Transaction is not verified"
+//     })
+//   }
+// })
+
+
+exports.createOrder = catchAsyncErrors(async (req, res) => {
+  Cashfree.XClientId = process.env.CASHFREE_KEY_ID;
+  Cashfree.XClientSecret = process.env.CASHFREE_KEY_SECRET;
+  Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+  const { userId } = req.body;
+  const order_id = `order_${randomUUID()}`
+  try {
+    var request = {
+      "order_amount": "1",
+      "order_currency": "INR",
+      order_id: order_id,
+      "customer_details": {
+        "customer_id": "node_sdk_test",
+        "customer_name": "",
+        "customer_email": "example@gmail.com",
+        "customer_phone": "9999999999"
+      },
+      "order_meta": {
+        "return_url": `${process.env.FRONTEND_URL}/payment-status?order_id=${order_id}&user_id=${userId}`
+      },
+      "order_note": ""
     }
 
-    res.json(order)
-  } catch (err) {
-    res.status(500).send("Error");
+    const response = await Cashfree.PGCreateOrder("2023-08-01", request);
+    const a = response.data;
+    res.status(200).json({ ...a })
+  } catch (error) {
+    console.error('Error setting up order request:', error.response?.data);
+    res.status(400).json({ error: error.response?.data || "Payment order failed" })
   }
 })
 
-exports.verifyPayment = catchAsyncErrors(async (req, res, next) => {
-  const { userId, razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-  console.log(userId)
+exports.verifyPayment = catchAsyncErrors(async (req, res) => {
+  const { orderId, userId } = req.body;
+  if (!orderId) {
+    res.status(400).json({ error: "Invalid Request. Order Id missing" })
+  }
+  Cashfree.XClientId = process.env.CASHFREE_KEY_ID;
+  Cashfree.XClientSecret = process.env.CASHFREE_KEY_SECRET;
+  Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+  let version = "2023-08-01"
   try {
-    const sha = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
-    sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
-    generated_signature = sha.digest("hex");
+    const response = await Cashfree.PGFetchOrder(version, orderId);
 
-    console.log("Generated signature: ", generated_signature, "inside verification fucntion")
-    console.log("generated the signnature")
-    if (generated_signature !== razorpay_signature) {
-      res.status(400).json({ message: "Transaction is not verified" });
+    const paymentData = response.data;
+    console.log(paymentData);
+
+    if (paymentData.order_status === "PAID") {
+      const activateResponse = await activateUser(userId);
+      console.log("user activated", activateResponse)
+
+      if (activateResponse.message !== "success") {
+        res.status(400).json({ message: "Error Activating User" });
+        return;
+      }
+      res.status(200).json({ success: true, message: "Payment Verified Successfully. User Activated" });
+    } else {
+      throw new Error("Verificaton Failed.")
     }
-
-    console.log("signature verified");
-    const activateResponse = await activateUser(userId);
-    console.log("user activated", activateResponse)
-
-    if (activateResponse.message !== "success") {
-      res.status(400).json({ message: "Error Activating User" });
-    }
-
-    res.status(200).json({
-      message: "success",
-      orderId: razorpay_order_id,
-      paymentId: razorpay_payment_id
-    })
   } catch (error) {
-    res.status(400).json({
-      error, message: "Transaction is not verified"
-    })
+    console.error('Error verifing payment:', error.response?.data);
+    res.status(400).json({ success: false, error: error.response?.data || "Payment verification failed" })
   }
 })

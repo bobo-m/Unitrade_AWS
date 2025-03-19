@@ -25,6 +25,7 @@ import AuthListener from "./components/AuthListener";
 import TermsAndConditions from "./components/Terms";
 import InstructionPage from "./components/Instruction";
 import Verify from "./components/Verify";
+import PaymentStatus from "./components/PaymentStatus";
 // Styles
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -188,6 +189,7 @@ function App() {
                   element={<TermsAndConditions />}
                 />
                 <Route path="/verify" element={<Verify />} />
+                <Route path="payment-status" element={<PaymentStatus />} />
               </Route>
 
               {/* Private Routes */}

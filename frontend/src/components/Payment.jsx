@@ -13,6 +13,7 @@ import { fetchAPIData } from "../../store/actions/homeActions";
 import { FaCopy } from "react-icons/fa"; // Make sure to install react-icons
 import QRCode from "qrcode";
 import Loader from "../components/Loader";
+import { load } from "@cashfreepayments/cashfree-js";
 
 function loadScript(src) {
   return new Promise((resolve) => {
@@ -47,82 +48,106 @@ function Payment() {
     setShowLink(true);
   };
 
-  console.log(userId);
+  let cashfree;
+  var initializeSDK = async function () {
+    cashfree = await load({
+      mode: "sandbox",
+    });
+  };
+  initializeSDK();
 
-  async function displayRazorpay() {
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
+  const doPayment = async () => {
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/v1/create-order`, {
+        userId,
+      });
 
-    if (!res) {
-      alert("Razorpay failed to load!!");
-      return;
+      const { payment_session_id } = response.data;
+
+      let checkoutOptions = {
+        paymentSessionId: payment_session_id,
+        redirectTarget: "_self",
+      };
+      cashfree.checkout(checkoutOptions);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const response = await axios.post(`${BACKEND_URL}/api/v1/create-order`, {
-      amount: 30000,
-      currency: "INR",
-      receipt: "test",
-    });
+  // async function displayRazorpay() {
+  //   const res = await loadScript(
+  //     "https://checkout.razorpay.com/v1/checkout.js"
+  //   );
 
-    const order = await response.data;
-    const options = {
-      key: "rzp_test_AaD2IDQC4fNPRN",
-      amount: order.amount,
-      currency: order.currency,
-      name: "Unitrade Corp",
-      description: "Test Transaction",
-      image:
-        "https://images.freeimages.com/images/large-previews/56d/peacock-1169961.jpg?fmt=webp&h=350",
-      order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      handler: async function (response) {
-        setLoading(true);
-        const body = { ...response, userId };
-        console.log("Payment response: ", body);
-        try {
-          const validateRes = await axios.post(
-            `${BACKEND_URL}/api/v1/verify-payment`,
-            body,
-            { headers: { "Content-Type": "application/json" } }
-          );
+  //   if (!res) {
+  //     alert("Razorpay failed to load!!");
+  //     return;
+  //   }
 
-          console.log("Verification response: ", validateRes.data);
+  //   const response = await axios.post(`${BACKEND_URL}/api/v1/create-order`, {
+  //     amount: 30000,
+  //     currency: "INR",
+  //     receipt: "test",
+  //   });
 
-          if (
-            validateRes.status !== 200 ||
-            validateRes.data.message !== "success"
-          ) {
-            throw new Error("Payment not verified");
-          }
+  //   const order = await response.data;
+  //   const options = {
+  //     key: "rzp_test_AaD2IDQC4fNPRN",
+  //     amount: order.amount,
+  //     currency: order.currency,
+  //     name: "Unitrade Corp",
+  //     description: "Test Transaction",
+  //     image:
+  //       "https://images.freeimages.com/images/large-previews/56d/peacock-1169961.jpg?fmt=webp&h=350",
+  //     order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+  //     handler: async function (response) {
+  //       setLoading(true);
+  //       const body = { ...response, userId };
+  //       console.log("Payment response: ", body);
+  //       try {
+  //         const validateRes = await axios.post(
+  //           `${BACKEND_URL}/api/v1/verify-payment`,
+  //           body,
+  //           { headers: { "Content-Type": "application/json" } }
+  //         );
 
-          navigate("/login");
-        } catch (error) {
-          console.log("Payment Verification Error: ", error.response.data);
-        } finally {
-          setLoading(false);
-        }
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
+  //         console.log("Verification response: ", validateRes.data);
 
-    const paymentObject = new window.Razorpay(options);
+  //         if (
+  //           validateRes.status !== 200 ||
+  //           validateRes.data.message !== "success"
+  //         ) {
+  //           throw new Error("Payment not verified");
+  //         }
 
-    paymentObject.on("payment.failed", function (response) {
-      alert(response.error.code);
-      alert(response.error.description);
-      alert(response.error.source);
-      alert(response.error.step);
-      alert(response.error.reason);
-      alert(response.error.metadata.order_id);
-      alert(response.error.metadata.payment_id);
-    });
-    paymentObject.open();
-  }
+  //         navigate("/login");
+  //       } catch (error) {
+  //         console.log("Payment Verification Error: ", error.response.data);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     },
+  //     notes: {
+  //       address: "Razorpay Corporate Office",
+  //     },
+  //     theme: {
+  //       color: "#3399cc",
+  //     },
+  //   };
+
+  //   const paymentObject = new window.Razorpay(options);
+
+  //   paymentObject.on("payment.failed", function (response) {
+  //     alert(response.error.code);
+  //     alert(response.error.description);
+  //     alert(response.error.source);
+  //     alert(response.error.step);
+  //     alert(response.error.reason);
+  //     alert(response.error.metadata.order_id);
+  //     alert(response.error.metadata.payment_id);
+  //   });
+  //   paymentObject.open();
+  // }
 
   useEffect(() => {
     // Initialize Telegram WebApp
@@ -392,7 +417,7 @@ function Payment() {
       <div className="w-full max-w-lg bg-black text-white min-h-screen shadow-lg overflow-hidden flex flex-col justify-center items-center">
         <button
           className="w-min bg-white rounded-md px-5 py-2 text-black whitespace-nowrap"
-          onClick={displayRazorpay}
+          onClick={doPayment}
         >
           Pay Now
         </button>
