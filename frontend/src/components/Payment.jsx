@@ -14,6 +14,15 @@ import { FaCopy } from "react-icons/fa"; // Make sure to install react-icons
 import QRCode from "qrcode";
 import Loader from "../components/Loader";
 import { load } from "@cashfreepayments/cashfree-js";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheck,
+  faCircleExclamation,
+  faCircleInfo,
+  faFileContract,
+} from "@fortawesome/free-solid-svg-icons";
+import badgeCheck from "../assets/icon/badge-check.png";
 
 function loadScript(src) {
   return new Promise((resolve) => {
@@ -51,7 +60,7 @@ function Payment() {
   let cashfree;
   var initializeSDK = async function () {
     cashfree = await load({
-      mode: "sandbox",
+      mode: "production",
     });
   };
   initializeSDK();
@@ -413,14 +422,170 @@ function Payment() {
   }
 
   return (
-    <div className="bg-white flex justify-center items-center min-h-screen">
-      <div className="w-full max-w-lg bg-black text-white min-h-screen shadow-lg overflow-hidden flex flex-col justify-center items-center">
+    // <div className="bg-gray-900 flex justify-center items-center h-full p-4">
+    //   <div className="w-full h-full max-w-lg bg-gray-800 rounded-xl text-white shadow-lg overflow-hidden p-4 gap-8 flex flex-col justify-center items-center">
+    //     <div className="mt-auto">
+    //       <span>
+    //         <img src={logo} alt="Logo" className="w-12 h-12" />
+    //       </span>
+    //     </div>
+    //     <button
+    //       className="w-min bg-white rounded-md px-5 py-2 text-black whitespace-nowrap"
+    //       onClick={doPayment}
+    //     >
+    //       Pay Now
+    //     </button>
+    //     <span>
+    //       <p>&#8377; 370.00</p>
+    //       <p>* Including GST</p>
+    //     </span>
+    //     <div className="w-full space-y-2">
+    //       <h3 className="text-lg font-semibold">Benefits</h3>
+    //       <p>
+    //         <ul className="list-disc">
+    //           <li>Get free subscriptions to digital services</li>
+    //           <li>Access logo creation, website design, and graphic ads</li>
+    //           <li>Earn rewards with our rewards app</li>
+    //           <li>Simply tap to earn more rewards</li>
+    //         </ul>
+    //       </p>
+    //     </div>
+    //     <div className="w-full space-y-2">
+    //       <h3 className="text-lg font-semibold">Important:</h3>
+    //       <p>
+    //         <ul className="list-disc">
+    //           <li>
+    //             Subscription{" "}
+    //             <Link to={"/termsAndCondition"} className="text-blue-700">
+    //               terms and conditions
+    //             </Link>{" "}
+    //             apply
+    //           </li>
+    //           <li>
+    //             Please see our{" "}
+    //             <Link to={"/privacy"} className="text-blue-700">
+    //               privacy policy
+    //             </Link>{" "}
+    //             for details
+    //           </li>
+    //         </ul>
+    //       </p>
+    //     </div>
+    //   </div>
+    // </div>
+    <div className="bg-black flex justify-center items-center h-screen p-6">
+      <div className="w-full h-full max-w-sm bg-black rounded-lg text-white shadow-lg overflow-hidden p-6 gap-6 flex flex-col justify-center items-center border border-gray-700">
+        {/* Tagline */}
+        <p className="text-white text-center text-xl font-medium">
+          Let’s make your first step the right one! 🚀
+        </p>
+        {/* Logo */}
+        <div className="w-full flex flex-col items-center justify-center">
+          <img src={logo} alt="Logo" className="w-20 h-20 opacity-90" />
+        </div>
+
+        {/* Payment Button (Touch-Friendly) */}
         <button
-          className="w-min bg-white rounded-md px-5 py-2 text-black whitespace-nowrap"
+          className="bg-[#4509AE] active:bg-blue-700 text-white font-medium rounded-lg px-6 py-3 shadow-md w-full text-center"
           onClick={doPayment}
         >
           Pay Now
         </button>
+
+        {/* Price Info */}
+        <span className="text-center text-gray-300 text-lg">
+          <p className="font-bold text-2xl">&#8377; 370.00</p>
+          <p className="text-sm opacity-80">* Including GST</p>
+        </span>
+
+        {/* Benefits Section */}
+        <div className="w-full space-y-3 text-gray-300">
+          <h3 className="text-lg font-semibold text-white border-b border-gray-600 pb-2 flex gap-2 items-center">
+            <img src={badgeCheck} alt="Badge Check Icon" className="w-5 h-5" />
+            Benefits
+          </h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-[#4509AE] w-5 h-5"
+              />
+              Get free subscriptions to digital services
+            </li>
+            <li className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-[#4509AE] w-5 h-5"
+              />
+              Access logo creation, website design, and graphic ads
+            </li>
+            <li className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-[#4509AE] w-5 h-5"
+              />
+              Earn rewards with our rewards app
+            </li>
+            <li className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-[#4509AE] w-5 h-5"
+              />
+              Simply tap to earn more rewards
+            </li>
+            <li className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faCheck}
+                className="text-[#4509AE] w-5 h-5"
+              />
+              Refer friends and win exciting rewards
+            </li>
+          </ul>
+        </div>
+
+        {/* Important Section */}
+        <div className="w-full space-y-3 text-gray-300">
+          <h3 className="text-lg font-semibold text-white border-b border-gray-600 pb-2 flex items-center gap-2">
+            <FontAwesomeIcon
+              icon={faCircleInfo}
+              className="w-5 h-5 text-[#4509AE]"
+            />{" "}
+            Important:
+          </h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faCircleExclamation}
+                className="w-5 h-5 text-red-400"
+              />
+              <Link
+                to={"/termsAndCondition"}
+                className="text-blue-400 underline"
+              >
+                Terms and Conditions
+              </Link>{" "}
+              apply
+            </li>
+            <li className="flex items-center gap-2">
+              <FontAwesomeIcon
+                icon={faCircleExclamation}
+                className="w-5 h-5 text-red-400"
+              />
+              Please see our{" "}
+              <Link to={"/privacy"} className="text-blue-400 underline">
+                Privacy Policy
+              </Link>{" "}
+              for details
+            </li>
+          </ul>
+        </div>
+
+        {/* Contact Us Button */}
+        <Link to={"/contact"}>
+          <button className="bg-gray-700 active:bg-gray-600 text-white font-medium rounded-lg px-6 py-3 shadow-md w-full text-center mt-4">
+            Contact Us
+          </button>
+        </Link>
       </div>
     </div>
   );

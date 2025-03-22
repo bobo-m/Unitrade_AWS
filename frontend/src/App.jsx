@@ -26,9 +26,11 @@ import TermsAndConditions from "./components/Terms";
 import InstructionPage from "./components/Instruction";
 import Verify from "./components/Verify";
 import PaymentStatus from "./components/PaymentStatus";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 // Styles
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import Contact from "./components/Contact";
 
 // Dispatch initial load action
 store.dispatch(loadUserFromLocalStorage());
@@ -188,8 +190,10 @@ function App() {
                   path="/termsAndCondition"
                   element={<TermsAndConditions />}
                 />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/verify" element={<Verify />} />
                 <Route path="payment-status" element={<PaymentStatus />} />
+                <Route path="/contact" element={<Contact />} />
               </Route>
 
               {/* Private Routes */}

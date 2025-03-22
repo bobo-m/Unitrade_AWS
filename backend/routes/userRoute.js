@@ -237,4 +237,5 @@ router.get("/stats-data", isApiAuthenticatedUser, getUserStats);
 
 router.post("/user-name", isApiAuthenticatedUser, getUserNameFromReferralCode);
 
+
 module.exports = router;

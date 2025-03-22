@@ -582,19 +582,30 @@ const activateUser = async (userId) => {
 exports.createOrder = catchAsyncErrors(async (req, res) => {
   Cashfree.XClientId = process.env.CASHFREE_KEY_ID;
   Cashfree.XClientSecret = process.env.CASHFREE_KEY_SECRET;
-  Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+  Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
   const { userId } = req.body;
   const order_id = `order_${randomUUID()}`
   try {
+    const [users] = await db.query(`
+      SELECT user_name, mobile, email
+      FROM users
+      WHERE id=?  
+    `, [userId])
+    if (!users.length) {
+      throw new Error("User not found in database")
+    }
+
+    const user = users[0];
+
     var request = {
-      "order_amount": "1",
+      "order_amount": "370",
       "order_currency": "INR",
       order_id: order_id,
       "customer_details": {
-        "customer_id": "node_sdk_test",
-        "customer_name": "",
-        "customer_email": "example@gmail.com",
-        "customer_phone": "9999999999"
+        "customer_id": userId,
+        "customer_name": user.user_name,
+        "customer_email": user.email,
+        "customer_phone": user.mobile
       },
       "order_meta": {
         "return_url": `${process.env.FRONTEND_URL}/payment-status?order_id=${order_id}&user_id=${userId}`
@@ -618,7 +629,7 @@ exports.verifyPayment = catchAsyncErrors(async (req, res) => {
   }
   Cashfree.XClientId = process.env.CASHFREE_KEY_ID;
   Cashfree.XClientSecret = process.env.CASHFREE_KEY_SECRET;
-  Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+  Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
   let version = "2023-08-01"
   try {
     const response = await Cashfree.PGFetchOrder(version, orderId);
