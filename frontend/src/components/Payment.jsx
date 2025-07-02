@@ -75,7 +75,7 @@ function Payment() {
 
       let checkoutOptions = {
         paymentSessionId: payment_session_id,
-        redirectTarget: "_self",
+        redirectTarget: "_blank",
       };
       cashfree.checkout(checkoutOptions);
     } catch (error) {
@@ -473,7 +473,7 @@ function Payment() {
     //     </div>
     //   </div>
     // </div>
-    <div className="bg-black flex justify-center items-center h-screen p-6">
+    <div className="bg-black flex justify-center items-center min-h-screen overflow-scroll p-6">
       <div className="w-full h-full max-w-sm bg-black rounded-lg text-white shadow-lg overflow-hidden p-6 gap-6 flex flex-col justify-center items-center border border-gray-700">
         {/* Tagline */}
         <p className="text-white text-center text-xl font-medium">
@@ -558,24 +558,28 @@ function Payment() {
                 icon={faCircleExclamation}
                 className="w-5 h-5 text-red-400"
               />
-              <Link
-                to={"/termsAndCondition"}
-                className="text-blue-400 underline"
-              >
-                Terms and Conditions
-              </Link>{" "}
-              apply
+              <p>
+                <Link
+                  to={"/termsAndCondition"}
+                  className="text-blue-400 underline"
+                >
+                  Terms and Conditions
+                </Link>{" "}
+                apply
+              </p>
             </li>
             <li className="flex items-center gap-2">
               <FontAwesomeIcon
                 icon={faCircleExclamation}
                 className="w-5 h-5 text-red-400"
               />
-              Please see our{" "}
-              <Link to={"/privacy"} className="text-blue-400 underline">
-                Privacy Policy
-              </Link>{" "}
-              for details
+              <p>
+                Please see our{" "}
+                <Link to={"/privacy"} className="text-blue-400 underline">
+                  Privacy Policy
+                </Link>{" "}
+                for details
+              </p>
             </li>
           </ul>
         </div>

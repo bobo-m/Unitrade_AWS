@@ -31,6 +31,8 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import Contact from "./components/Contact";
+import RefundPolicy from "./components/RefundPolicy";
+import Landing from "./components/Landing";
 
 // Dispatch initial load action
 store.dispatch(loadUserFromLocalStorage());
@@ -177,12 +179,13 @@ function App() {
               {/* Redirect based on token existence */}
               <Route
                 path="/"
-                element={token ? <Navigate to="/home" /> : <Signup />}
+                element={token ? <Navigate to="/home" /> : <Landing />}
               />
 
               {/* Public Routes */}
               <Route element={<PublicRoute />}>
                 <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
                 <Route path="/payment/:id" element={<Payment />} />
                 <Route path="/forgot" element={<ForgotPassword />} />
                 <Route path="/confirm" element={<Confirm />} />
@@ -194,6 +197,7 @@ function App() {
                 <Route path="/verify" element={<Verify />} />
                 <Route path="payment-status" element={<PaymentStatus />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="refund-policy" element={<RefundPolicy />} />
               </Route>
 
               {/* Private Routes */}

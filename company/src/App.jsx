@@ -61,7 +61,7 @@ function App({ Component, pageProps }) {
     <Provider store={store}>
       {" "}
       {/* <KeyboardFix /> */}
-      <BrowserRouter basename="/company">
+      <BrowserRouter>
         <AuthListener />
         <Routes>
 

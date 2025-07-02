@@ -54,8 +54,12 @@
                                         value="<%= blog.end_date ? blog.end_date : '' %>" disabled>
                                 </div>
                             </div>
-
-
+                            <div class="col-lg-6 float-left">
+                                <div class="mb-3 required">
+                                    <input type="checkbox" id="required" name="required" <%= blog.required ? "checked" : ""  %> disabled>
+                                    <label for="required" class="form-label">Required</label>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="row">
@@ -63,7 +67,7 @@
                                 <div class="mb-3">
                                     <label for="social_media" class="form-label">Social Media</label>
                                     <div>
-                                        <% const socialMedias=['Facebook', 'X' , 'Instagram' , 'LinkedIn' , 'Snapchat'
+                                        <% const socialMedias=['Telegram', 'Facebook', 'X' , 'Instagram' , 'LinkedIn' , 'Snapchat'
                                             , 'YouTube' , 'Pinterest' , 'WhatsApp' ]; socialMedias.forEach(media=> {
                                             %>
                                             <div class="form-check">
@@ -147,3 +151,15 @@
     </div> <!-- end card -->
 </div><!-- end col -->
 </div>
+
+<style>
+ .required{
+    display: flex;
+    align-items: center;
+    height: min-content;
+    gap: 0.5rem;
+ }    
+ #required{
+    margin-bottom: 0.5rem;
+ }
+</style>

@@ -10,11 +10,13 @@ const localStorage = new LocalStorage("./scratch");
 const dotenv = require("dotenv");
 dotenv.config({ path: "backend/config/config.env" });
 const Razorpay = require("razorpay");
-const crypto = require("crypto")
-const { distributeCoins } = require("../contollers/userController")
+const crypto = require("crypto");
+const { distributeCoins } = require("../contollers/userController");
 const sendEmail = require("../utils/sendEmail");
-const { Cashfree } = require("cashfree-pg")
+const { Cashfree } = require("cashfree-pg");
 const { randomUUID } = require("crypto");
+
+// const twilio = require("twilio");
 
 // const table_name = user_transction;
 // const module_title = Model.module_title;
@@ -29,7 +31,7 @@ const { randomUUID } = require("crypto");
 // exports.allTransactions = catchAsyncErrors(async (req, res, next) => {
 //   // Fetch transaction data with related user info
 //   const [transactions] = await db.query(
-//     `SELECT 
+//     `SELECT
 //         ut.user_id,
 //         ut.company_id,
 //         ut.tranction_coin,
@@ -44,19 +46,18 @@ const { randomUUID } = require("crypto");
 //      JOIN users u ON ut.user_id = u.id
 //      LEFT JOIN user_data ud ON u.id = ud.user_id` );
 
-
 //   console.log("transactions:", transactions); // Log for debugging
 
 //   res.render("transactions/index", {
 //     layout: "layouts/main",
-//     title: "User Transactions", 
+//     title: "User Transactions",
 //     transactions, // Pass transactions array to the frontendsdg
 //   });
 // });
 // exports.allTransactions = catchAsyncErrors(async (req, res, next) => {
 //   // Fetch transaction data with related user info
 //   const [transactions] = await db.query(
-//     `SELECT 
+//     `SELECT
 //         ut.id, -- Include the 'id' field (unique transaction identifier)
 //         ut.user_id,
 //         ut.company_id,
@@ -70,14 +71,14 @@ const { randomUUID } = require("crypto");
 //         ud.upi_id -- Added field from user_data table
 //      FROM user_transction ut
 //      JOIN users u ON ut.user_id = u.id
-//      LEFT JOIN user_data ud ON u.id = ud.user_id` 
+//      LEFT JOIN user_data ud ON u.id = ud.user_id`
 //   );
 
 //   console.log("transactions:", transactions); // Log for debugging
 
 //   res.render("transactions/index", {
 //     layout: "layouts/main",
-//     title: "User Transactions", 
+//     title: "User Transactions",
 //     transactions, // Pass transactions array to the frontend
 //   });
 // });
@@ -133,8 +134,8 @@ const { randomUUID } = require("crypto");
 
 // // Update the company's coin balance by adding the transaction_coin
 // const [companyCoinUpdateResult] = await connection.query(
-//   `UPDATE company_data 
-//    SET company_coin = COALESCE(company_coin, 0) + ? 
+//   `UPDATE company_data
+//    SET company_coin = COALESCE(company_coin, 0) + ?
 //    WHERE company_id = ?`,
 //   [tranction_coin, company_id]
 // );
@@ -143,7 +144,6 @@ const { randomUUID } = require("crypto");
 // if (companyCoinUpdateResult.affectedRows === 0) {
 //   throw new Error("Failed to update the company's coin balance");
 // }
-
 
 //     // Commit the transaction
 //     await connection.commit();
@@ -167,7 +167,6 @@ const { randomUUID } = require("crypto");
 //     connection.release();
 //   }
 // });
-
 
 exports.allTransactions = catchAsyncErrors(async (req, res, next) => {
   // Fetch transaction data with related user info
@@ -199,7 +198,6 @@ exports.allTransactions = catchAsyncErrors(async (req, res, next) => {
     transactions, // Pass transactions array to the frontend
   });
 });
-
 
 exports.approveTransaction = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.body; // Use `id` instead of `transaction_id`
@@ -345,7 +343,6 @@ exports.approveTransaction = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
 // exports.approveTransaction = catchAsyncErrors(async (req, res, next) => {
 //   const { id } = req.body; // Use `id` instead of `transaction_id`
 
@@ -413,8 +410,8 @@ exports.approveTransaction = catchAsyncErrors(async (req, res, next) => {
 
 //     // Step 4: Update the company's coin balance by adding the transaction_coin
 //     const [companyCoinUpdateResult] = await connection.query(
-//       `UPDATE company_data 
-//        SET company_coin = COALESCE(company_coin, 0) + ? 
+//       `UPDATE company_data
+//        SET company_coin = COALESCE(company_coin, 0) + ?
 //        WHERE company_id = ?`,
 //       [tranction_coin, company_id]
 //     );
@@ -447,20 +444,23 @@ exports.approveTransaction = catchAsyncErrors(async (req, res, next) => {
 //   }
 // });
 
-
 const activateUser = async (userId) => {
-  console.log(userId)
   const newStatus = 1;
-  console.log("automated activate user function called")
+  console.log("automated activate user function called");
+  console.log("Activating user with user id: ", userId);
   try {
     //update pay_confirm in the database
-    const updatePayConfirmQuery = "UPDATE users SET pay_confirm = 1 WHERE id = ?";
+    const updatePayConfirmQuery =
+      "UPDATE users SET pay_confirm = 1 WHERE id = ?";
     const [payConfirmResult] = await db.query(updatePayConfirmQuery, [userId]);
     // Log result to debug
     console.log("Pay confirm update result:", payConfirmResult);
 
     if (!payConfirmResult || payConfirmResult.affectedRows === 0) {
-      return { error: true, message: "Failed to update pay_confirm field in users table" };
+      return {
+        error: true,
+        message: "Failed to update pay_confirm field in users table",
+      };
     }
 
     // Update user status in the database
@@ -471,7 +471,7 @@ const activateUser = async (userId) => {
     await distributeCoins(userId);
 
     const [userData] = await db.query(
-      "SELECT email, user_name FROM users WHERE id = ?",
+      "SELECT email, user_name, mobile FROM users WHERE id = ?",
       [userId]
     );
     if (!userData || userData.length === 0) {
@@ -479,6 +479,26 @@ const activateUser = async (userId) => {
     }
     const userEmail = userData[0]?.email;
     const userName = userData[0]?.user_name;
+    // const userPhone = userData[0]?.mobile;
+
+    // const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    // const authToken = process.env.TWILIO_AUTH_TOKEN;
+    // const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+    // const twilioWhatsAppNumber = process.env.TWILIO_WHATSAPP_NUMBER;
+
+    // if (
+    //   !accountSid ||
+    //   !authToken ||
+    //   !twilioPhoneNumber ||
+    //   !twilioWhatsAppNumber
+    // ) {
+    //   console.error(
+    //     "Twilio credentials are missing. Please check your .env file."
+    //   );
+    //   return { error: true, message: "Twilio credentials are missing" };
+    // }
+    // // Initialize Twilio client
+    // const client = new twilio(accountSid, authToken);
     // Step 2: Construct the email body
     const emailMessage = `
 <html>
@@ -520,13 +540,61 @@ const activateUser = async (userId) => {
     };
 
     await sendEmail(emailOptions); // Send the email to the user's email address
-    // Send a JSON response
-    return { message: "success" }
+
+    //     if (userPhone) {
+    //       const textMessage = `Hi ${userName}, 👋
+
+    //       🎉 *Congratulations!* Your Unitradehub account has been activated.
+
+    //       💰 *2000 Coins Credited!*
+    //       You have received 2000 coins in your pending balance. Earn more by completing tasks and inviting friends!
+
+    //       🚀 *Start Earning Now:*
+    //       🔗 https://t.me/TheUnitadeHub_bot?startapp=1
+
+    //       For support, contact us. Welcome aboard! 🚀
+    //       *Team Unitradehub*`;
+
+    //       const whatsappMessage = `Hi ${userName}, 👋
+
+    // 🎉 *Congratulations!* Your Unitradehub account has been successfully activated.
+
+    // 🔐 *Your Registered Password:* ${userPassword}
+    // (Keep this safe and do not share it with anyone.)
+
+    // 💰 *2000 Coins Credited!*
+    // You have received 2000 coins in your pending balance. Earn more by completing tasks and inviting friends!
+
+    // 🚀 *Start Earning Now:*
+    // Tap below to log in and explore Unitradehub:
+    // 🔗 https://t.me/TheUnitadeHub_bot?startapp=1
+
+    // For any support, feel free to reach out. Welcome aboard! 🚀
+
+    // *Team Unitradehub*`;
+
+    //       await client.messages.create({
+    //         from: twilioWhatsAppNumber,
+    //         to: `whatsapp:+91${userPhone}`, // User's phone number with country code
+    //         body: whatsappMessage,
+    //       });
+
+    //       console.info(`WhatsApp message sent to ${userPhone}`);
+    //     }
+
+    //     await client.messages.create({
+    //       from: twilioPhoneNumber,
+    //       to: `+91${userPhone}`,
+    //       body: textMessage,
+    //     });
+    //     console.info(`✅ SMS sent to ${userPhone}`);
+
+    return { message: "success" };
   } catch (error) {
     console.error("Error updating user status:", error);
-    return { error: `Error updating user status: ${error}` }
+    return { error: `Error updating user status: ${error}` };
   }
-}
+};
 
 // exports.createOrder = catchAsyncErrors(async (req, res, next) => {
 //   try {
@@ -578,79 +646,100 @@ const activateUser = async (userId) => {
 //   }
 // })
 
-
 exports.createOrder = catchAsyncErrors(async (req, res) => {
   Cashfree.XClientId = process.env.CASHFREE_KEY_ID;
   Cashfree.XClientSecret = process.env.CASHFREE_KEY_SECRET;
   Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
   const { userId } = req.body;
-  const order_id = `order_${randomUUID()}`
+  const order_id = `order_${randomUUID()}`;
+  if (!userId) {
+    console.log("User Id Missing");
+    return;
+  }
   try {
-    const [users] = await db.query(`
+    const [users] = await db.query(
+      `
       SELECT user_name, mobile, email
       FROM users
       WHERE id=?  
-    `, [userId])
+    `,
+      [userId]
+    );
     if (!users.length) {
-      throw new Error("User not found in database")
+      throw new Error("User not found in database");
     }
 
     const user = users[0];
 
     var request = {
-      "order_amount": "370",
-      "order_currency": "INR",
+      order_amount: "370",
+      order_currency: "INR",
       order_id: order_id,
-      "customer_details": {
-        "customer_id": userId,
-        "customer_name": user.user_name,
-        "customer_email": user.email,
-        "customer_phone": user.mobile
+      customer_details: {
+        customer_id: `unitrade-${userId}`,
+        customer_name: user.user_name,
+        customer_email: user.email,
+        customer_phone: user.mobile,
       },
-      "order_meta": {
-        "return_url": `${process.env.FRONTEND_URL}/payment-status?order_id=${order_id}&user_id=${userId}`
+      order_meta: {
+        return_url: `${process.env.FRONTEND_URL}/payment-status?order_id=${order_id}&user_id=${userId}`,
       },
-      "order_note": ""
-    }
+      order_note: "",
+    };
+
+    console.log("Create cashfree order response for user: ", userId)
 
     const response = await Cashfree.PGCreateOrder("2023-08-01", request);
     const a = response.data;
-    res.status(200).json({ ...a })
+    console.log(`Cashfree create order response for user: ${userId} is `, a)
+    res.status(200).json({ ...a });
   } catch (error) {
-    console.error('Error setting up order request:', error.response?.data);
-    res.status(400).json({ error: error.response?.data || "Payment order failed" })
+    console.error("Error setting up order request:", error.response?.data || error);
+    res
+      .status(400)
+      .json({ error: error.response?.data || "Payment order failed" });
   }
-})
+});
 
 exports.verifyPayment = catchAsyncErrors(async (req, res) => {
   const { orderId, userId } = req.body;
-  if (!orderId) {
-    res.status(400).json({ error: "Invalid Request. Order Id missing" })
+  if (!orderId || !userId) {
+    console.log("order or user id missing")
+    console.log("order_id: ", orderId, ", user_id: ", userId)
+    res.status(400).json({ error: "Invalid Request. Order Id missing" });
+    return;
   }
   Cashfree.XClientId = process.env.CASHFREE_KEY_ID;
   Cashfree.XClientSecret = process.env.CASHFREE_KEY_SECRET;
   Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
-  let version = "2023-08-01"
+  let version = "2023-08-01";
   try {
+    console.log(`Verifying payment for order_id: ${orderId}, user: ${userId}`);
     const response = await Cashfree.PGFetchOrder(version, orderId);
 
     const paymentData = response.data;
-    console.log(paymentData);
+    console.log("Payment data for user: ", userId, ": ", paymentData);
 
     if (paymentData.order_status === "PAID") {
       const activateResponse = await activateUser(userId);
-      console.log("user activated", activateResponse)
+      console.log("User activated: ", activateResponse);
 
       if (activateResponse.message !== "success") {
         res.status(400).json({ message: "Error Activating User" });
         return;
       }
-      res.status(200).json({ success: true, message: "Payment Verified Successfully. User Activated" });
+      res.status(200).json({
+        success: true,
+        message: "Payment Verified Successfully. User Activated",
+      });
     } else {
-      throw new Error("Verificaton Failed.")
+      throw new Error("Verificaton Failed.");
     }
   } catch (error) {
-    console.error('Error verifing payment:', error.response?.data);
-    res.status(400).json({ success: false, error: error.response?.data || "Payment verification failed" })
+    console.error("Error verifing payment:", error.response?.data || error);
+    res.status(400).json({
+      success: false,
+      error: error.response?.data || "Payment verification failed",
+    });
   }
-})
+});

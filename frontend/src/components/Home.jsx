@@ -9,6 +9,7 @@ import {
   fetchCoinData,
   transferCoins,
   fetchStats,
+  fetchQuestHistory,
 } from "../../store/actions/homeActions";
 import { ImCross } from "react-icons/im";
 import { toast, ToastContainer } from "react-toastify";
@@ -51,9 +52,11 @@ function Home() {
   const userData = apiData?.me?.data || null;
   const pendingCoin = apiData?.coin?.data || null;
   const statsData = apiData?.stats?.data || null;
+  const questData = apiData?.quest?.quests || [];
   const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [tapAllowed, setTapAllowed] = useState(false);
   const navigate = useNavigate();
   const [theme, setTheme] = useState("light"); // Theme state: light or dark
   const [warningShown, setWarningShown] = useState(false); // Track if warning is shown
@@ -73,6 +76,7 @@ function Home() {
         await dispatch(fetchCoinData());
         await dispatch(fetchMeData());
         await dispatch(fetchStats());
+        await dispatch(fetchQuestHistory());
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -81,12 +85,24 @@ function Home() {
     };
     fetchData();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!questData) {
+      return;
+    }
+    const isAllowed = questData
+      .filter((q) => q.required === 1)
+      .every((q) => q.status === "completed");
+
+    setTapAllowed(isAllowed);
+  }, [questData]);
+
   const handleNavigate = () => {
     navigate("/Profile");
   };
 
   const handleCardClick = (e) => {
-    if (pendingCoin?.pending_coin < userData.reduce_coin_rate) {
+    if (pendingCoin?.pending_coin < userData.reduce_coin_rate || !tapAllowed) {
       // if (!warningShown) {
       //   toast.warn("You have no coins.");
       //   setWarningShown(true);

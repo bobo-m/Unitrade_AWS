@@ -56,11 +56,17 @@
                                             value="<%= blog.end_date ? blog.end_date : '' %>">
                                     </div>
                                 </div>
-                                  <div class="col-lg-6 float-left">
+                                <div class="col-lg-6 float-left">
                                     <div class="mb-3">
                                         <label for="duration" class="form-label">Duration (in minutes)</label>
                                         <input type="number" id="duration" name="duration" class="form-control"
                                             value="<%= blog.duration %>" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 float-left">
+                                    <div class="mb-3 required">
+                                        <input type="checkbox" id="required" name="required" <%= blog.required ? "checked" : "" %>>
+                                        <label for="required" class="form-label">Required</label>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +75,7 @@
                                     <div class="mb-3">
                                         <label for="social_media" class="form-label">Social Media</label>
                                         <div>
-                                            <% const socialMedias=['Facebook', 'X' , 'Instagram' , 'LinkedIn'
+                                            <% const socialMedias=['Telegram', 'Facebook', 'X' , 'Instagram' , 'LinkedIn'
                                                 , 'Snapchat' , 'YouTube' , 'Pinterest' , 'WhatsApp' ];
                                                 socialMedias.forEach(media=> {
                                                 %>
@@ -139,6 +145,19 @@
     </div> <!-- end card -->
 </div><!-- end col -->
 </div>
+
+<style>
+ .required{
+    display: flex;
+    align-items: center;
+    height: min-content;
+    gap: 0.5rem;
+ }    
+ #required{
+    margin-bottom: 0.5rem;
+ }
+</style>
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const activityDropdown = document.getElementById("activity");

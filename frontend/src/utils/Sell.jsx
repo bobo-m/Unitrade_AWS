@@ -55,7 +55,13 @@ function Send({ togglePopup, coinRanges, userData, company_id }) {
   const upiId = userData?.upi_id; // Non-editable UPI ID
   const totalCoin = userData?.coins;
   const companyId = String(company_id);
+  const [upi, setUpi] = useState(upiId);
   const dispatch = useDispatch();
+
+  const handleUpiChange = (e) => {
+    const newUpi = e.target.value;
+    setUpi(newUpi);
+  };
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -134,7 +140,7 @@ function Send({ togglePopup, coinRanges, userData, company_id }) {
     setLoading(true);
 
     const payload = {
-      upi_id: upiId,
+      upi_id: upi,
       company_id: companyId,
       tranction_coin: Number(coinAmount),
       transction_amount: Number(rupeeValue),
@@ -186,7 +192,11 @@ function Send({ togglePopup, coinRanges, userData, company_id }) {
           <div>= ₹{rupeeValue}</div>
         </div>
 
-        <Input value={upiId} readOnly placeholder="Your UPI ID" />
+        <Input
+          value={upi}
+          placeholder="Your UPI ID"
+          onChange={handleUpiChange}
+        />
 
         <div className="flex justify-center items-center">
           <button

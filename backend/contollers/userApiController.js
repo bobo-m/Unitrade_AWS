@@ -1838,6 +1838,7 @@ exports.createSellTransaction = async (req, res, next) => {
 
     // Step 1: Validate incoming request (making sure required fields are present)
     const schema = Joi.object({
+      upi_id: Joi.string().required(),
       company_id: Joi.string().required(),
       tranction_coin: Joi.number().required(),
       transction_amount: Joi.number().required(),
@@ -1914,14 +1915,15 @@ exports.createSellTransaction = async (req, res, next) => {
     // Step 4: Create transaction in the database
     const [transactionResult] = await db.query(
       `INSERT INTO user_transction 
-      (user_id, company_id, tranction_coin, tranction_rate, transction_amount, data_created, status) 
-      VALUES (?, ?, ?, ?, ?, NOW(), "unapproved")`,
+      (user_id, company_id, tranction_coin, tranction_rate, transction_amount, data_created, status, upi_id) 
+      VALUES (?, ?, ?, ?, ?, NOW(), "unapproved", ?)`,
       [
         user_id,
         req.body.company_id,
         transactionCoins,
         transactionRate,
         req.body.transction_amount,
+        req.body.upi_id
       ]
     );
 

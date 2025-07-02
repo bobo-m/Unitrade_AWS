@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast noti
 import "../Styles/LoginDesign.css";
 import ToastNotification from "./Toast";
 import { BACKEND_URL } from "../config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 // Custom Hook for Referral Code
 
 function Signup() {
@@ -271,6 +273,16 @@ function Signup() {
         setShow={setShowToast}
       />
       <div className="w-full max-w-lg bg-black text-white rounded-lg shadow-lg font-Inter flex flex-col h-full overflow-hidden">
+        {/* Back Button */}
+        <div className="w-full flex justify-start pl-5 pt-[1.5rem]">
+          <button
+            onClick={() => navigate(-1)}
+            className="text-blue-400 hover:text-blue-300 flex items-center gap-2"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="w-5 h-5" />
+            Back
+          </button>
+        </div>
         <div id="content" className="p-6 space-y-6 flex-grow">
           <h2 className="text-2xl font-bold text-center text-white mb-6">
             Create account
@@ -394,7 +406,7 @@ function Signup() {
               )}
             </div>
             {/* UPI ID Input */}
-            <div className="relative">
+            {/* <div className="relative">
               <label className="absolute -top-2 left-3 text-xs text-gray-400 bg-black px-1">
                 UPI ID
               </label>
@@ -408,9 +420,29 @@ function Signup() {
                 className="w-full px-4 py-3 bg-black border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-500 text-sm"
                 placeholder="UPI ID"
               />
-            </div>
+            </div> */}
+            {/* Contact Us & Refund Policy Links */}
+            <p className="text-xs text-gray-400 mt-4">
+              Need help?
+              <Link
+                to="/contact"
+                className="text-blue-500 hover:underline ml-1"
+              >
+                Contact Us
+              </Link>
+            </p>
+
+            <p className="text-xs text-gray-400 mt-2">
+              View our
+              <Link
+                to="/refund-policy"
+                className="text-blue-500 hover:underline ml-1"
+              >
+                Refund & Cancellation Policy
+              </Link>
+            </p>
             {/* Terms and Privacy */}
-            <div className="flex items-center justify-center mt-4 space-x-2">
+            <div className="flex items-center justify-center mt-2 space-x-2">
               <input
                 type="checkbox"
                 id="terms"
@@ -421,7 +453,7 @@ function Signup() {
                 onChange={(e) => setIsChecked(e.target.checked)} // Update state on change
               />
               <label htmlFor="terms" className="text-xs text-gray-400">
-                By clicking 'Sign Up,' you agree to Block View's
+                By clicking 'Sign Up,' you agree to our
                 <Link
                   to="/termsAndCondition"
                   className="text-blue-500 hover:underline mx-1"
@@ -430,7 +462,7 @@ function Signup() {
                 </Link>
                 and
                 <Link
-                  to="/termsAndCondition"
+                  to="/privacy"
                   className="text-blue-500 hover:underline mx-1"
                 >
                   Privacy Policy

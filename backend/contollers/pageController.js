@@ -71,6 +71,7 @@ exports.createRecord = async (req, res, next) => {
     quest_url: req.body.quest_url,
     date_created: date_created,
     start_date: req.body.start_date,
+    required: req.body.required ? true : false,
     image: req.body.image || null, // Fix body.image to req.body.image
     description: sanitizedDescription,
     status: req.body.status,
@@ -175,6 +176,7 @@ exports.updateRecord = catchAsyncErrors(async (req, res, next) => {
     start_date: req.body.start_date, // New field for start date
     end_date: req.body.end_date, // New field for end date
     date_created: date_created,
+    required: req.body.required ? true : false,
     image: req.body.image,
     duration: req.body.duration,
     description: sanitizedDescription,
@@ -580,6 +582,7 @@ exports.getQuestHistory = async (req, res) => {
         q.image,
        q.duration,
         q.coin_earn,
+        q.required,
         q.social_media,  -- Include social_media field in the query
         CASE 
           WHEN uca.status = 'completed' THEN 'completed'
@@ -592,8 +595,8 @@ exports.getQuestHistory = async (req, res) => {
         AND uca.user_id = ? 
     AND uca.deleted = 0
   WHERE q.deleted = 0
-    AND q.end_date >= CURDATE() 
-    AND DATE(q.start_date) <= CURDATE()  
+    AND DATE(CONVERT_TZ(q.start_date, '+05:30', '+00:00')) <= CURDATE()
+  AND DATE(CONVERT_TZ(q.end_date, '+05:30', '+00:00')) >= CURDATE()
     `;
 
     // Execute the query to fetch all matching quests
@@ -610,6 +613,7 @@ exports.getQuestHistory = async (req, res) => {
       date_created: moment(quest.date_created).format("MM/DD/YYYY, h:mm:ss A"),
       start_date: moment(quest.start_date).format("MM/DD/YYYY, h:mm:ss A"),
       end_date: moment(quest.end_date).format("MM/DD/YYYY, h:mm:ss A"),
+      required: quest.required,
       description: quest.description,
       status: quest.completion_status,
       image:
@@ -641,7 +645,7 @@ exports.apiGetSingleRecord = catchAsyncErrors(async (req, res, next) => {
   try {
     const [quest_records] = await db.query(
       `
-      SELECT q.quest_name, q.quest_type, q.quest_url, q.date_created, q.description, q.status, q.coin_earn, q.image, 
+      SELECT q.quest_name, q.quest_type, q.quest_url, q.date_created, q.description, q.status, q.coin_earn, q.image, q.required
              q.screenshot_required, -- Added screenshot_required to the query
              COALESCE(u.status, 'not_completed') AS user_status
       FROM quest q

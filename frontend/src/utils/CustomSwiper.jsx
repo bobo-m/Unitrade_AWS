@@ -2,6 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const CustomSwiper = ({
   banners,
@@ -223,6 +224,17 @@ const CustomSwiper = ({
                           </button>
                         )}
                       </>
+                    )}
+                    {banner.status === "completed" && (
+                      <Link
+                        to={banner.quest_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <button className="bg-[#282828] text-white w-20 h-full flex items-center justify-center py-2 rounded-full text-xs font-bold">
+                          Link
+                        </button>
+                      </Link>
                     )}
                   </div>
                 </div>

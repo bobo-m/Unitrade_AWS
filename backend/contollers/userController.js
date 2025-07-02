@@ -17,6 +17,7 @@ const { LocalStorage } = require("node-localstorage");
 const localStorage = new LocalStorage("./scratch");
 const { v4: uuidv4 } = require("uuid");
 const mysqlPool = require("../config/mysql_database"); // Adjust the path if necessary
+// const twilio = require("twilio");
 
 // const pool = require('../config/db');  // Assuming you're using MySQL pool
 const {
@@ -555,20 +556,23 @@ exports.allUsers = catchAsyncErrors(async (req, res, next) => {
   //  WHERE u.user_type IN (?)`,
   //   ["user"]
   // );
-  let page = Math.floor(parseInt(req.query.start) / parseInt(req.query.length) + 1) || 1; // Convert start to page number
+  let page =
+    Math.floor(parseInt(req.query.start) / parseInt(req.query.length) + 1) || 1; // Convert start to page number
   let limit = parseInt(req.query.length) || 10;
   let offset = (page - 1) * limit;
 
-  const [[totalCountResult]] = await db.query(`
+  const [[totalCountResult]] = await db.query(
+    `
     SELECT COUNT(*) AS total FROM users WHERE user_type IN (?)
-  `, ["user"]);
+  `,
+    ["user"]
+  );
 
   const totalUsers = totalCountResult.total;
   // Extract search query (if any)
   let searchQuery = req.query.search?.trim();
   let isSearch = searchQuery && searchQuery.length > 0;
   let searchPattern = `%${searchQuery}%`;
-
 
   const [users] = await db.query(
     `
@@ -590,16 +594,35 @@ exports.allUsers = catchAsyncErrors(async (req, res, next) => {
          INNER JOIN user_data ud ON u.id = ud.user_id
          LEFT JOIN users parent ON ud.parent_id = parent.id
          WHERE u.user_type IN (?) 
-         ${isSearch ? `AND (u.user_name LIKE ? OR u.email LIKE ? OR u.mobile LIKE ? OR ud.referral_code LIKE ?)` : ``}
+         ${isSearch
+      ? `AND (u.user_name LIKE ? OR u.email LIKE ? OR u.mobile LIKE ? OR ud.referral_code LIKE ?)`
+      : ``
+    }
         ) AS totalRecords
     FROM users u
     INNER JOIN user_data ud ON u.id = ud.user_id
     LEFT JOIN users parent ON ud.parent_id = parent.id
     WHERE u.user_type IN (?)
-    ${isSearch ? `AND (u.user_name LIKE ? OR u.email LIKE ? OR u.mobile LIKE ? OR ud.referral_code LIKE ?)` : ``}
+    ${isSearch
+      ? `AND (u.user_name LIKE ? OR u.email LIKE ? OR u.mobile LIKE ? OR ud.referral_code LIKE ?)`
+      : ``
+    }
     LIMIT ? OFFSET ?`,
     isSearch
-      ? ["user", searchPattern, searchPattern, searchPattern, searchPattern, "user", searchPattern, searchPattern, searchPattern, searchPattern, limit, offset]
+      ? [
+        "user",
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        "user",
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+        limit,
+        offset,
+      ]
       : ["user", "user", limit, offset]
   );
   if (req.xhr || req.query.draw) {
@@ -607,7 +630,7 @@ exports.allUsers = catchAsyncErrors(async (req, res, next) => {
       draw: req.query.draw, // Required for DataTables tracking
       recordsTotal: totalUsers, // Total records in DB
       recordsFiltered: totalUsers, // No filters applied, so same as total
-      data: users // Send user data in DataTables format
+      data: users, // Send user data in DataTables format
     });
   }
   res.render(module_slug + "/index", {
@@ -628,6 +651,7 @@ exports.addFrom = catchAsyncErrors(async (req, res, next) => {
 });
 
 ////////////////////////
+
 exports.createRecord = catchAsyncErrors(async (req, res, next) => {
   // Validate request body with Joi schema
   try {
@@ -883,6 +907,7 @@ exports.createRecord = catchAsyncErrors(async (req, res, next) => {
     }
   }
 });
+
 exports.deactivateUser = catchAsyncErrors(async (req, res, next) => {
   const userId = req.body.userId;
   const newStatus = req.body.status;
@@ -1208,6 +1233,131 @@ exports.deactivateUser = catchAsyncErrors(async (req, res, next) => {
 //   }
 // };
 
+// exports.updateUserStatus = catchAsyncErrors(async (req, res, next) => {
+//   const userId = req.body.userId;
+//   const newStatus = req.body.status;
+//   const performedByUserId = req.body.performedByUserId;
+
+//   try {
+//     // Update user status in the database
+//     await QueryModel.updateData(
+//       "users",
+//       { status: newStatus },
+//       { pay_confirm: newStatus },
+//       { id: userId }
+//     );
+//     console.info(`User status updated for User ID: ${userId}`);
+
+//     // Distribute coins based on activation
+//     await exports.distributeCoins(userId);
+
+//     const [userData] = await db.query(
+//       "SELECT email, user_name FROM users WHERE id = ?",
+//       [userId]
+//     );
+//     if (!userData || userData.length === 0) {
+//       return next(new ErrorHandler("User email not found", 404));
+//     }
+//     const userEmail = userData[0]?.email;
+//     const userName = userData[0]?.user_name;
+//     // const userPhone = userData[0]?.mobile;
+
+//     // const accountSid = process.env.TWILIO_ACCOUNT_SID;
+//     // const authToken = process.env.TWILIO_AUTH_TOKEN;
+//     // const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+//     // const twilioWhatsAppNumber = process.env.TWILIO_WHATSAPP_NUMBER;
+
+//     // if (
+//     //   !accountSid ||
+//     //   !authToken ||
+//     //   !twilioPhoneNumber ||
+//     //   !twilioWhatsAppNumber
+//     // ) {
+//     //   console.error(
+//     //     "Twilio credentials are missing. Please check your .env file."
+//     //   );
+//     //   return { error: true, message: "Twilio credentials are missing" };
+//     // }
+//     // Initialize Twilio client
+//     // const client = new twilio(accountSid, authToken);
+
+//     // Step 2: Construct the email body
+//     const emailMessage = `
+// <html>
+//   <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; padding: 20px;">
+//     <p>Hi ${userName},</p>
+
+//     <p>🎉 <strong>Congratulations!</strong> Your Unitradehub account has been successfully activated. We're thrilled to have you on board.</p>
+
+//     <p>🌟 <strong>Here's what you can do now:</strong></p>
+
+//     <p>💰 <strong>2000 Coins Awaiting You!</strong><br>
+//        You’ve received 2000 coins in your pending balance. Complete fun tasks, earn more coins, and transfer them to your total balance by tapping!</p>
+
+//     <p>🙌 <strong>Earn More Coins!</strong><br>
+//        Invite your friends and earn referral rewards 🤑.<br>
+//        Complete exciting tasks to earn even more coins.</p>
+
+//     <p>💼 <strong>Share Coins & Earn Money!</strong><br>
+//        Once you've accumulated enough coins, share them with companies at the best rates. We'll ensure the payment is transferred directly to your account.</p>
+
+//     <p>👉 <strong>Ready to get started?</strong> Log in to Unitradehub via Telegram now!</p>
+
+//     <p>
+//       <a href="https://t.me/TheUnitadeHub_bot?startapp=1"
+//          style="color: #1a73e8; text-decoration: none; font-weight: bold;">🔗 Click here to access Unitradehub</a>
+//     </p>
+
+//     <p>If you have any questions, feel free to contact our support team. We're here to help you every step of the way!</p>
+
+//     <p>Welcome to the world of trading, earning, and growing 🚀.<br>Team Unitradehub</p>
+//   </body>
+// </html>
+// `;
+
+//     const emailOptions = {
+//       email: userEmail, // User's email address
+//       subject: "Welcome to Unitradehub! Your Account is Now Activated 🚀",
+//       message: emailMessage, // Passing the HTML message content here
+//     };
+
+//     await sendEmail(emailOptions); // Send the email to the user's email address
+//     // if (userPhone) {
+//     //   const whatsappMessage =
+//     //     "🎉 Welcome to Unitradehub! Your account is now activated. Earn coins, refer friends & trade smartly. 🚀";
+//     //   const textMessage =
+//     //     "🎉 Your Unitradehub account is activated! Start earning coins now. 🚀";
+
+//     //   await client.messages.create({
+//     //     from: twilioWhatsAppNumber,
+//     //     to: `whatsapp:+91${userPhone}`, // User's phone number with country code
+//     //     body: whatsappMessage,
+//     //   });
+
+//     // console.info(`WhatsApp message sent to ${userPhone}`);
+
+//     // await client.messages.create({
+//     //   from: twilioPhoneNumber,
+//     //   to: `+91${userPhone}`,
+//     //   body: textMessage,
+//     // });
+
+//     // console.info(`✅ SMS sent to ${userPhone}`);
+//     // }
+
+//     // Send a JSON response
+//     res.json({
+//       success: true,
+//       message: `User status updated successfully for User ID: ${userId}`,
+//     });
+//   } catch (error) {
+//     console.error("Error updating user status:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 exports.updateUserStatus = catchAsyncErrors(async (req, res, next) => {
   const userId = req.body.userId;
   const newStatus = req.body.status;
@@ -1215,7 +1365,11 @@ exports.updateUserStatus = catchAsyncErrors(async (req, res, next) => {
 
   try {
     // Update user status in the database
-    await QueryModel.updateData("users", { status: newStatus }, { id: userId });
+    await QueryModel.updateData(
+      "users",
+      { status: newStatus, pay_confirm: 1 },
+      { id: userId }
+    );
     console.info(`User status updated for User ID: ${userId}`);
 
     // Distribute coins based on activation
@@ -1236,33 +1390,33 @@ exports.updateUserStatus = catchAsyncErrors(async (req, res, next) => {
   <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; padding: 20px;">
     <p>Hi ${userName},</p>
 
-    <p>🎉 <strong>Congratulations!</strong> Your Unitradehub account has been successfully activated. We're thrilled to have you on board.</p>
+    <p><strong>Welcome to Unitradehub!</strong> Your account is now active, and we're glad to have you with us.</p>
 
-    <p>🌟 <strong>Here's what you can do now:</strong></p>
+    <p><strong>Here’s what’s next:</strong></p>
 
-    <p>💰 <strong>2000 Coins Awaiting You!</strong><br>
-       You’ve received 2000 coins in your pending balance. Complete fun tasks, earn more coins, and transfer them to your total balance by tapping!</p>
+    <p><strong>💰 Start with 2000 Coins</strong><br>
+       Your account has been credited with 2000 coins in your pending balance. Participate in activities to unlock more benefits and transfer coins when eligible.</p>
 
-    <p>🙌 <strong>Earn More Coins!</strong><br>
-       Invite your friends and earn referral rewards 🤑.<br>
-       Complete exciting tasks to earn even more coins.</p>
+    <p><strong>📈 Grow Your Balance</strong><br>
+       Take part in engaging activities and connect with others to enhance your experience.</p>
 
-    <p>💼 <strong>Share Coins & Earn Money!</strong><br>
-       Once you've accumulated enough coins, share them with companies at the best rates. We'll ensure the payment is transferred directly to your account.</p>
+    <p><strong>🔄 Use Your Coins Smartly</strong><br>
+       Once you've reached the required balance, explore options to utilize your coins under the best available terms.</p>
 
-    <p>👉 <strong>Ready to get started?</strong> Log in to Unitradehub via Telegram now!</p>
+    <p><strong>🚀 Ready to begin?</strong> Access Unitradehub through Telegram and explore the possibilities.</p>
 
     <p>
-      <a href="https://t.me/TheUnitadeHub_bot?startapp=1" 
+      <a href="https://t.me/TheUnitradebot?startapp=UNITRADE2" 
          style="color: #1a73e8; text-decoration: none; font-weight: bold;">🔗 Click here to access Unitradehub</a>
     </p>
 
-    <p>If you have any questions, feel free to contact our support team. We're here to help you every step of the way!</p>
+    <p>Need assistance? Our support team is available whenever you need help.</p>
 
-    <p>Welcome to the world of trading, earning, and growing 🚀.<br>Team Unitradehub</p>
+    <p>Enjoy your journey with Unitradehub!<br><strong>Team Unitradehub</strong></p>
   </body>
 </html>
 `;
+
 
     const emailOptions = {
       email: userEmail, // User's email address
@@ -1378,7 +1532,7 @@ exports.distributeCoins = async function (userId, performedByUserId) {
     console.error("Error distributing coins:", error);
     throw error;
   }
-}
+};
 
 async function updatePendingCoins(
   userId,

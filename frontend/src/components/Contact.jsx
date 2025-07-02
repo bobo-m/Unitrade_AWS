@@ -3,6 +3,7 @@ import {
   faEnvelope,
   faGlobe,
   faArrowLeft,
+  faMapMarkerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../assets/logo/U.png";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +36,8 @@ const ContactUs = () => {
 
         {/* Description */}
         <p className="text-gray-300 text-center">
-          Have questions or need assistance? We’re here to help!
+          Get in touch with with Unitrade Hub - A Subsidiary of UNIDIGITIZE
+          PRIVATE LIMITED
         </p>
 
         {/* Contact Info */}
@@ -65,6 +67,16 @@ const ContactUs = () => {
               >
                 unidigitize.com
               </a>
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <FontAwesomeIcon
+              icon={faMapMarkerAlt}
+              className="text-blue-400 w-5 h-5"
+            />
+            <span>
+              Location: Pn -cp - 45 & 46, 104, Ff, Studio Apartment, Vishwakarma
+              Industrial Area, Jaipur, Rajasthan, India, 302013
             </span>
           </div>
         </div>

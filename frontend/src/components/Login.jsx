@@ -8,6 +8,9 @@ import ToastNotification from "./Toast";
 import { logo } from "../images/index";
 import Loader from "../components/Loader";
 import Swal from "sweetalert2"; // Import SweetAlert2
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+
 function Login() {
   const dispatch = useDispatch();
   const [mobile, setMobile] = useState("");
@@ -129,6 +132,16 @@ function Login() {
         show={showToast}
         setShow={setShowToast}
       />
+      {/* Back Button */}
+      <div className="w-full flex justify-start absolute top-6 left-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-blue-400 hover:text-blue-300 flex items-center gap-2"
+        >
+          <FontAwesomeIcon icon={faArrowLeft} className="w-5 h-5" />
+          Back
+        </button>
+      </div>
       <div className="w-full max-w-lg bg-black text-white shadow-2xl rounded-2xl overflow-hidden font-Inter">
         {/* Header Section */}
         <div className="p-6 sm:p-10 shadow-lg">
@@ -205,6 +218,28 @@ function Login() {
                 )}
               </button>
             </div>
+            <div>
+              {/* Contact Us & Refund Policy Links */}
+              <p className="text-xs text-gray-400 mt-2">
+                Need help?
+                <Link
+                  to="/contact"
+                  className="text-blue-500 hover:underline ml-1"
+                >
+                  Contact Us
+                </Link>
+              </p>
+
+              <p className="text-xs text-gray-400 mt-2">
+                View our
+                <Link
+                  to="/refund-policy"
+                  className="text-blue-500 hover:underline ml-1"
+                >
+                  Refund & Cancellation Policy
+                </Link>
+              </p>
+            </div>
           </form>
 
           <div className="text-center">
@@ -243,7 +278,7 @@ function Login() {
           <p className="text-xs sm:text-sm text-[#909090]">
             New to Unitrade?
             <Link
-              to="/"
+              to="/signup"
               className="text-white font-semibold hover:underline ml-1"
             >
               Sign Up

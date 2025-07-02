@@ -7,8 +7,10 @@
             // Clear previous errors
             document.querySelectorAll(".error-message").forEach((el) => el.remove());
 
+            console.log(new FormData(e.target))
+
             // Required fields
-            const requiredFields = ["quest_name", "quest_type", "activity", "start_date", "end_date", "social_media", "quest_url", "coin_earn", "description"];
+            const requiredFields = ["quest_name", "quest_type", "activity", "start_date", "end_date", "required", "social_media", "quest_url", "coin_earn", "description"];
 
             requiredFields.forEach((field) => {
                 const fieldElement = form.elements[field];
@@ -103,14 +105,21 @@
                                         <input type="datetime-local" id="end_date" name="end_date" class="form-control">
                                     </div>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3 required">
+                                        <input type="checkbox" id="required" name="required" value="required"/>
+                                        <label for="required" class="form-label">Required</label>
+                                    </div>
+                                </div>
                             </div>
+
 
                             <div class="row">
                                 <div class="col-lg-6 float-left">
                                     <div class="mb-3">
                                         <label for="social_media" class="form-label">Social Media</label>
                                         <div>
-                                            <% const socialMedias=['Facebook', 'X' , 'Instagram' , 'LinkedIn'
+                                            <% const socialMedias=['Telegram','Facebook', 'X' , 'Instagram' , 'LinkedIn'
                                                 , 'Snapchat' , 'YouTube' , 'Pinterest' , 'WhatsApp' ]; %>
                                                 <% socialMedias.forEach(media=> { %>
                                                     <div class="form-check">
@@ -198,6 +207,18 @@
         </div> <!-- end card -->
     </div> <!-- end col -->
 </div>
+
+<style>
+    .required{
+       display: flex;
+       align-items: center;
+       height: min-content;
+       gap: 0.5rem;
+    }    
+    #required{
+       margin-bottom: 0.5rem;
+    }
+   </style>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {

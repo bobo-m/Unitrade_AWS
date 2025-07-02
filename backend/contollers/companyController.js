@@ -1126,7 +1126,7 @@ exports.reqGetAllReqApi = async (req, res, next) => {
         ut.id AS transaction_id, 
         ut.*, 
         u.user_name, 
-        ud.upi_id 
+        ut.upi_id 
       FROM 
         user_transction ut
       JOIN 

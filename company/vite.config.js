@@ -22,7 +22,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "/company/", // Base URL set karein agar app `/company` path par hosted hai
+  //base: "/company/", // Base URL set karein agar app `/company` path par hosted hai
   server: {
     host: true, // Sabhi IPs par listen karne ke liye
     port: 5000, // Custom port set karein
